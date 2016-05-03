@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ben Christel - ES6</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      .remark-code {
+        font-size: 24px;
+        line-height: 125%;
+      }
+
+      .hljs-default .hljs {
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Two Patterns for Functional Refactoring in JavaScript
+
+---
+
+class: center, middle
+
+# 1. Data Pipelines
+
+--
+
+# 2. Currying and Composition
+
+???
+
+One is data pipelines - like, Unix-style pipelines
+
+Two is currying and composition, so I guess that's actually three.
+
+In case you don't know what these terms mean:
+
+---
+
+class: middle
+
+```javascript
+function add(x, y) {
+  return x + y
+}
+
+add(3, 4) // returns 7
+```
+
+???
+
+Currying is when you have a function that takes multiple arguments like add x and y, and you rewrite it to take a sequence of calls instead, like this.
+
+---
+
+class: middle
+
+```javascript
+function add(x) {
+  return function(y) {
+    return x + y
+  }
+}
+
+add(3)(4) // returns 7
+```
+
+???
+
+At first glance, this doesn't seem useful, but in part 2 I'll talk about why it's actually awesome.
+
+If you're wondering how they came up with a word like "currying" for this procedure, it's actually named after
+
+---
+
+class: center, middle
+
+![Haskell Curry](https://wiki.haskell.org/wikiupload/8/86/HaskellBCurry.jpg)
+
+Haskell Curry
+
+???
+
+this guy, Haskell Curry.
+
+---
+
+???
+
+Composition in its broadest sense is just putting two independent things together to make a new thing. It occurs all over the place in both functional and object-oriented programming and it's very, very powerful.
+
+In this talk we're going to be composing functions together to make new functions.
+
+---
+
+class: center, middle
+
+# Functional Data Pipelines
+
+???
+
+So, let's talk about functional data pipelines!
+
+---
+
+class: center, middle
+
+# I have a problem
+
+???
+
+I have a problem. I love Javascript.
+
+But that's not the problem I'm going to be solving in this talk.
+
+---
+
+class: center, middle
+
+# I have a list of Muppets
+
+---
+
+class: center, middle
+
+# I want to render it as HTML
+
+---
+
+class: middle
+
+```javascript
+var muppets = [
+    {name: 'Kermit'},
+    {name: 'Miss Piggy'},
+    {name: 'Fozzie'}
+]
+```
+
+???
+
+Here's my list. An array of Javascript objects that each have a name property.
+
+---
+
+class: middle
+
+```javascript
+var muppets = [
+    {name: 'Kermit'},
+    {name: 'Miss Piggy'},
+    {name: 'Fozzie'}
+]
+```
+
+```html
+<li>Kermit</li>
+<li>Miss Piggy</li>
+<li>Fozzie</li>
+```
+
+???
+
+And this is the HTML I want out.
+
+Now, as soon as I see this problem I start thinking about how I could break it down into pieces that are easy to test. So here are the pieces I came up with
+
+---
+
+class: middle
+
+1. Get the name of each Muppet
+2. &nbsp;
+3. &nbsp;
+
+```javascript
+[
+    'Kermit',
+    'Miss Piggy',
+    'Fozzie'
+]
+```
+
+???
+
+Get the name of each muppet. That gives me an array of names.
+
+---
+
+class: middle
+
+1. Get the name of each Muppet
+2. Wrap each name in an `<li>` tag
+3. &nbsp;
+
+```javascript
+[
+    '<li>Kermit</li>',
+    '<li>Miss Piggy</li>',
+    '<li>Fozzie</li>'
+]
+```
+
+???
+
+Wrap each name in an LI tag
+
+---
+
+class: middle
+
+1. Get the name of each Muppet
+2. Wrap each name in an `<li>` tag
+3. Join the tags with newlines
+
+```html
+
+<li>Kermit</li>
+<li>Miss Piggy</li>
+<li>Fozzie</li>
+                                                                //
+```
+
+???
+
+Join them with newlines
+
+---
+
+class: center, middle
+
+# Each of these steps can be a function
+
+???
+
+- I can make each of these steps a function,
+- so I can unit test them individually
+
+---
+
+class: middle
+
+```javascript
+function renderMuppets(muppets) {
+    var _ = muppets
+
+    _ = getNames(_)
+    _ = wrapInListItems(_)
+    _ = joinOnNewlines(_)
+
+    var html = _
+    return html
+}
+```
+
+---
+
+class: middle
+
+```javascript
+function renderMuppets(muppets) {
+    var _ = muppets
+
+    _ =         (_)
+    _ =                (_)
+    _ =               (_)
+
+    var html = _
+    return html
+}
+```
+
+---
+
+class: middle
+
+```javascript
+         renderMuppets =
+                                                                //
+
+        getNames
+        wrapInListItems
+        joinOnNewlines
+
+                                                                //
+                                                                //
+                                                                //
+```
+
+---
+
+class: middle
+
+```javascript
+var compose = (f, g) => x => g(f(x))
+
+var pipeline = f => g =>
+  typeof g === 'function'
+    ? pipeline(compose(f, g))
+    : f(g)
+```
+
+---
+
+class: middle
+
+```javascript
+var renderMuppets = pipeline
+    (getNames)
+    (wrapInListItems)
+    (joinOnNewlines)
+```
+
+---
+
+class: middle
+
+```javascript
+function getNames(muppets) {
+  var names = []
+
+  for (var i = 0; i < muppets.length; i++) {
+    names[i] = muppets[i].name
+  }
+
+  return names
+}
+```
+
+---
+
+class: middle
+
+```javascript
+function wrapInListItems(strings) {
+  var listItems = []
+
+  for (var i = 0; i < strings.length; i++) {
+    listItems[i] = '<li>' + strings[i] + '</li>'
+  }
+
+  return listItems
+}
+```
+
+???
+
+In both of these functions, the only thing that varies (besides the variable names), is the operation we perform on each element of the array. The rest is identical.
+
+So we can extract a function that just does the iteration, and we can inject the per-item operation into it.
+
+Functional programming has a name for this iterating function. It's called map.
+
+---
+
+class: center, middle
+
+# `map`
+
+???
+
+We can define it like this:
+
+---
+
+class: middle
+
+```javascript
+function map(func, input) {
+  var output = []
+
+  for (var i = 0; i < input.length; i++) {
+    output[i] = func(input[i])
+  }
+
+  return output
+}
+```
+
+---
+
+class: center, middle
+
+# Mission Accomplished
+
+---
+
+class: middle
+
+```javascript
+function getName(muppet) {
+  return muppet.name
+}
+
+map(getName, muppets)
+// returns ['Kermit', 'Miss Piggy', 'Fozzie']
+```
+
+---
+
+class: middle
+
+```javascript
+function renderMuppets(muppets) {
+    var _ = muppets
+
+    _ = map(getName, _)
+    _ = map(wrapInListItem, _)
+    _ = joinOnNewlines(_)
+
+    var html = _
+    return html
+}
+```
+
+---
+
+class: middle
+
+```javascript
+var renderMuppets = pipeline
+    (getNames)
+    (wrapInListItems)
+    (joinOnNewlines)
+```
+
+---
+
+class: middle
+
+```javascript
+var renderMuppets = pipeline
+    (map(getName, ???))
+    (wrapInListItems)
+    (joinOnNewlines)
+```
+
+---
+
+class: middle
+
+```javascript
+var renderMuppets = pipeline
+    (map(getName, ???))
+    (map(wrapInListItem, (╯°□°)╯︵ ┻━┻))
+    (joinOnNewlines)
+```
+
+---
+
+class: center, middle
+
+# `map`
+
+---
+
+class: middle
+
+```javascript
+var getNames = map(getName)
+var wrapInListItems = map(wrapInListItem)
+```
+
+---
+
+class: middle
+
+```javascript
+var map = function(func, input) {
+  /* ... */
+}
+```
+
+---
+
+class: middle
+
+```javascript
+var map = function(func) {
+  return function(input) {
+
+  }
+}
+input => {
+  /* ... */
+}
+```
+
+---
+
+class: middle
+
+```javascript
+var map = func => input => {
+  /* ... */
+}
+```
+
+---
+
+class: middle
+
+```javascript
+var renderMuppets = pipeline
+    (map(getName))
+    (map(wrapInListItem))
+    (joinOnNewlines)
+```
+
+---
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

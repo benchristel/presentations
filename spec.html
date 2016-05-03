@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>My Jasmine Tests (FIXME)</title>
+
+  <link rel="shortcut icon" type="image/png" href="spec/lib/jasmine-2.0.0/jasmine_favicon.png">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.3.4/jasmine.min.css">
+
+  <!-- Jasmine libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.3.4/jasmine.min.js"
+          type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.3.4/jasmine-html.min.js"
+          type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.3.4/boot.min.js"
+          type="text/javascript"></script>
+
+  <!-- Your libraries go here - note that some testing libraries, e.g.
+       angular-mocks, need to be loaded after Jasmine to work properly. -->
+
+  <!-- Your application code goes here -->
+
+  <!-- Your tests here -->
+  <script type="text/javascript">
+    var compose = (f, g) => x => g(f(x))
+
+    var pipeline = f => g =>
+      typeof g === 'function'
+        ? pipeline(compose(f, g))
+        : f(g)
+
+    var getName = muppet => muppet.name
+
+    var wrapInListItem = string => '<li>' + string + '</li>'
+
+    var map = func => list => {
+      var output = [], i
+      for (i = 0; i < list.length; i++) {
+        output.push(func(list[i]))
+      }
+      return output
+    }
+
+    var join = delim => list => list.join(delim)
+
+    describe('pipeline', function() {
+      it('pipes a value through one function', function() {
+        var addOne = x => x + 1
+        expect(pipeline(addOne)(1)).toEqual(2)
+      })
+
+      it('pipes a value through two functions', function() {
+        var addOne = x => x + 1
+        var doubleIt = x => x * 2
+
+        expect(pipeline(addOne)(doubleIt)(2)).toEqual(6)
+      })
+
+      it('pipes a value through three functions', function() {
+        var addOne = x => x + 1
+        var doubleIt = x => x * 2
+
+        expect(pipeline(addOne)(doubleIt)(addOne)(2)).toEqual(7)
+      })
+    });
+
+    describe('renderMuppets', function() {
+      var renderMuppets = pipeline
+        (map(getName))
+        (map(wrapInListItem))
+        (join("\n"))
+
+      it('renders muppets', function() {
+        var muppets = [
+          {name: 'Kermit'},
+          {name: 'Miss Piggy'},
+          {name: 'Fozzie'}
+        ]
+
+        expect(renderMuppets(muppets)).toEqual(
+          "<li>Kermit</li>\n"+
+          "<li>Miss Piggy</li>\n"+
+          "<li>Fozzie</li>"
+        )
+      })
+    })
+  </script>
+
+</head>
+
+<body>
+</body>
+</html>
