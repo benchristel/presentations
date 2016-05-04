@@ -126,7 +126,7 @@ class: center, middle
 
 I have a problem. I love Javascript.
 
-But that's not the problem I'm going to be solving in this talk.
+But we can't solve that problem with functional data pipelines, so let's look at a different problem
 
 ---
 
@@ -169,9 +169,11 @@ var muppets = [
 ```
 
 ```html
-<li>Kermit</li>
-<li>Miss Piggy</li>
-<li>Fozzie</li>
+<ol>
+  <li>Kermit</li>
+  <li>Miss Piggy</li>
+  <li>Fozzie</li>
+</ol>
 ```
 
 ???
@@ -187,6 +189,7 @@ class: middle
 1. Get the name of each Muppet
 2. &nbsp;
 3. &nbsp;
+4. &nbsp;
 
 ```javascript
 [
@@ -207,6 +210,7 @@ class: middle
 1. Get the name of each Muppet
 2. Wrap each name in an `<li>` tag
 3. &nbsp;
+4. &nbsp;
 
 ```javascript
 [
@@ -227,9 +231,10 @@ class: middle
 1. Get the name of each Muppet
 2. Wrap each name in an `<li>` tag
 3. Join the tags with newlines
+4. &nbsp;
 
 ```html
-
+                                                                //
 <li>Kermit</li>
 <li>Miss Piggy</li>
 <li>Fozzie</li>
@@ -242,14 +247,92 @@ Join them with newlines
 
 ---
 
+class: middle
+
+1. Get the name of each Muppet
+2. Wrap each name in an `<li>` tag
+3. Join the tags with newlines
+4. Wrap in an `<ol>` tag
+
+```html
+                                                                //
+<ol><li>Kermit</li>
+<li>Miss Piggy</li>
+<li>Fozzie</li></ol>
+                                                                //
+```
+
+???
+
+And finally, we wrap the whole thing in an ordered list
+
+---
+
 class: center, middle
 
 # Each of these steps can be a function
 
 ???
 
-- I can make each of these steps a function,
+- I want to make each of these steps a function,
 - so I can unit test them individually
+- so here are the functions I come up with
+
+---
+
+class: middle
+
+```javascript
+function getNames(muppets) {
+                                                                //
+                                                                //
+                                                                //
+                                                                //
+                                                                //
+}
+
+function wrapInListItems(strings) {
+                                                                //
+                                                                //
+                                                                //
+                                                                //
+                                                                //
+}
+
+function joinOnNewlines(strings) {           }
+
+function wrapInOrderedList(string) {
+                                                                //
+}
+```
+
+---
+
+class: middle
+
+```javascript
+function getNames(muppets) {
+  var names = []
+  for (var i = 0; i < muppets.length; i++) {
+    names[i] = muppets[i].name
+  }
+  return names
+}
+
+function wrapInListItems(strings) {
+  var lis = []
+  for (var i = 0; i < strings.length; i++) {
+    lis[i] = '<li>' + strings[i] + '</li>'
+  }
+  return lis
+}
+
+function joinOnNewlines(strings) { /* ... */ }
+
+function wrapInOrderedList(string) {
+  return '<ol>' + string + '</ol>'
+}
+```
 
 ---
 
@@ -262,6 +345,7 @@ function renderMuppets(muppets) {
     _ = getNames(_)
     _ = wrapInListItems(_)
     _ = joinOnNewlines(_)
+    _ = wrapInOrderedList(_)
 
     var html = _
     return html
@@ -273,12 +357,13 @@ function renderMuppets(muppets) {
 class: middle
 
 ```javascript
-function renderMuppets(muppets) {
+function              (muppets) {
     var _ = muppets
 
     _ =         (_)
     _ =                (_)
     _ =               (_)
+    _ =                  (_)
 
     var html = _
     return html
@@ -296,6 +381,7 @@ class: middle
         getNames
         wrapInListItems
         joinOnNewlines
+        wrapInOrderedList
 
                                                                 //
                                                                 //
@@ -324,6 +410,7 @@ var renderMuppets = pipeline
     (getNames)
     (wrapInListItems)
     (joinOnNewlines)
+    (wrapInOrderedList)
 ```
 
 ---
@@ -333,14 +420,18 @@ class: middle
 ```javascript
 function getNames(muppets) {
   var names = []
-
   for (var i = 0; i < muppets.length; i++) {
     names[i] = muppets[i].name
   }
-
   return names
 }
 ```
+
+???
+
+The only thing that's different between these two is the operation we're performing inside the loop. 
+
+Everything else is identical.
 
 ---
 
@@ -348,15 +439,75 @@ class: middle
 
 ```javascript
 function wrapInListItems(strings) {
-  var listItems = []
-
+  var lis   = []
   for (var i = 0; i < strings.length; i++) {
-    listItems[i] = '<li>' + strings[i] + '</li>'
+    lis[i]   = '<li>' + strings[i] + '</li>'
   }
-
-  return listItems
+  return lis
 }
 ```
+
+???
+
+---
+
+class: middle
+
+```javascript
+function getNames(input) {
+  var out = []
+  for (var i = 0; i < input.length; i++) {
+    out[i] = getName(input[i])
+  }
+  return out
+}
+```
+
+???
+
+We can pull out the parts that are different into functions, so now we have something like this.
+
+Now these two functions are completely identical except for that one function call inside the loop
+
+---
+
+class: middle
+
+```javascript
+function wrapInListItems(input) {
+  var out = []
+  for (var i = 0; i < input.length; i++) {
+    out[i] = wrapInListItem(input[i])
+  }
+  return out
+}
+```
+
+???
+
+We can pull out the parts that are different into functions, so now we have something like this.
+
+---
+
+???
+
+So now, we have to make a quantum leap. We have to shift our thinking about this refactoring out of procedural-land into functional-land. In order to eliminate the remaining duplication we need a higher-order function - a function that takes another function as a parameter. That way we can inject the part that differs between these two operations into the part that stays the same.
+
+Functional programming has a name for the specific higher-order function that we need. It's called `map`.
+
+---
+
+class: center, middle
+
+# map
+
+---
+
+???
+
+`getName` and `wrapInListItem` functions - the ones that operate on a single value - and upgrades them into functions that operate on arrays.
+
+---
 
 ???
 
@@ -437,6 +588,7 @@ var renderMuppets = pipeline
     (getNames)
     (wrapInListItems)
     (joinOnNewlines)
+    (wrapInOrderedList)
 ```
 
 ---
