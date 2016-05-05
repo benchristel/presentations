@@ -501,47 +501,222 @@ class: center, middle
 
 # map
 
----
-
 ???
 
-`getName` and `wrapInListItem` functions - the ones that operate on a single value - and upgrades them into functions that operate on arrays.
-
----
-
-???
-
-In both of these functions, the only thing that varies (besides the variable names), is the operation we perform on each element of the array. The rest is identical.
-
-So we can extract a function that just does the iteration, and we can inject the per-item operation into it.
-
-Functional programming has a name for this iterating function. It's called map.
-
----
-
-class: center, middle
-
-# `map`
-
-???
-
-We can define it like this:
+What map does, basically, is upgrade your functions to work on lists. So it takes in a function that operates on a single value and returns a new function that operates on lists.
 
 ---
 
 class: middle
 
 ```javascript
-function map(func, input) {
-  var output = []
+function double(x) {
+  return 2 * x
+}
+```
 
-  for (var i = 0; i < input.length; i++) {
-    output[i] = func(input[i])
+--
+
+```javascript
+double(3) // returns 6
+```
+
+--
+
+```javascript
+var doubleAll = map(double)
+```
+
+--
+
+
+```javascript
+doubleAll([1, 2, 3]) // returns [2, 4, 6]
+```
+
+???
+
+So here we have a function `double` that does some simple math.
+
+---
+
+class: middle
+
+```javascript
+function map(func) {
+  var funcThatWorksOnLists = function(items) {
+    var output = []
+    for (var i = 0; i < items.length; i++) {
+      output[i] = func(items[i])
+    }
+    return output
   }
+  
+  return funcThatWorksOnLists
+}
+```
 
+---
+
+class: middle
+
+```javascript
+let map = func => items => {
+  let output = []
+  for (let i = 0; i < items.length; i++) {
+    output[i] = func(items[i])
+  }
   return output
 }
 ```
+
+---
+
+class: middle
+
+```javascript
+var renderMuppets = pipeline
+    (getNames)
+    (wrapInListItems)
+    (joinOnNewlines)
+    (wrapInOrderedList)
+```
+
+---
+
+class: middle
+
+```javascript
+var renderMuppets = pipeline
+    (map(getName))
+    (map(wrapInListItem))
+    (joinOnNewlines)
+    (wrapInOrderedList)
+```
+
+---
+
+class: middle
+
+```javascript
+function getName(muppet) {
+  return muppet.name
+}
+
+function wrapInListItem(string) {
+  return '<li>' + string + '</li>'
+}
+
+function joinOnNewlines(strings) {
+  return strings.join('\n')
+}
+
+function wrapInOrderedList(string) {
+  return '<ol>' + string + '</ol>'
+}
+```
+
+???
+
+And here are the implementations of each of those functions. Now they're all nice one-liners but there's still duplication. We've got two functions that are wrapping a string in HTML tags. Fortunately, we can use currying again to DRY up this code.
+
+---
+
+class: middle
+
+```javascript
+function wrapInListItem(string) {
+  return '<li>' + string + '</li>'
+}
+
+function wrapInOrderedList(string) {
+  return '<ol>' + string + '</ol>'
+}
+```
+
+---
+
+class: middle
+
+## Extract a function
+
+```javascript
+function wrapInHtmlTag(tag, string) {
+  return '<' + tag + '>' + string + '</' + tag + '>'
+}
+                                                                                  //
+                                                                                  //
+
+function wrapInOrderedList(string) {
+  return wrapInHtmlTag('ol', string)
+}
+
+function wrapInListItem(string) {
+  return wrapInHtmlTag('li', string)
+}
+```
+
+???
+
+We're going to extract a function that parameterizes the tag name
+
+---
+
+class: middle
+
+## Curry
+
+```javascript
+function wrapInHtmlTag(tag) {
+  return function(string) {
+    return '<' + tag + '>' + string + '</' + tag + '>'
+  }
+}
+
+function wrapInOrderedList(string) {
+  return wrapInHtmlTag('ol')(string)
+}
+
+function wrapInListItem(string) {
+  return wrapInHtmlTag('li')(string)
+}
+```
+
+---
+
+class: middle
+
+## Remove the middleman
+
+```javascript
+function wrapInHtmlTag(tag) {
+  return function(string) {
+    return '<' + tag + '>' + string + '</' + tag + '>'
+  }
+}
+
+var wrapInOrderedList = wrapInHtmlTag('ol')
+
+var wrapInListItem = wrapInHtmlTag('li')
+```
+
+---
+
+class: middle
+
+## Inline
+
+```javascript
+var renderMuppets = pipeline
+    (map(getName))
+    (map(wrapInHtmlTag('li')))
+    (joinOnNewlines)
+    (wrapInHtmlTag('ol'))
+```
+
+???
+
+Notice that we're now composing functions two levels deep: we've got 
 
 ---
 
