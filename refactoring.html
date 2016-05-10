@@ -29,13 +29,11 @@
     <textarea id="source">
 class: center, middle
       
-# I spent two weeks refactoring 5 lines of code. Here's what I learned.
+# Patterns for Functional Refactoring
 
 ???
 
 Those of you who have paired with me know that I love refactoring. Almost as much as I love JavaScript, which is more than any sane person should, probably. So of course this talk is about refactoring JavaScript.
-
-This talk started out as propaganda for functional programming, which is why I spent two weeks refactoring 5 lines of code -- I was trying to refactor procedural code to a functional style and motivate the refactoring with something other than my own warm fuzzy feelings about functional programming. But I think the refactoring part is actually more interesting than the functional programming stuff, so my conclusions section is going to focus on that. 
 
 ---
 
@@ -43,7 +41,7 @@ class: middle
 
 ???
 
-So I'll show you the code in a minute, but first I want to talk about the problem the code is supposed to solve. Basically, it takes a list of people, and renders their names as an HTML list. I call it the "leaderboard" problem just so it has some flavor other than sawdust. You can imagine that we're rendering the leaderboard for your favorite game, isn't that exciting.
+So I came up with a really simple refactoring kata for this talk. I call it the "leaderboard" problem just to give it some flavor, but really the problem is - you have an array of person objects, and you want to render it as an HTML list, like this.
 
 --
 
@@ -81,52 +79,11 @@ function renderLeaderboard(people) {
 
 ???
 
-So without further ado, here's the five lines of code that solve this problem. For each person, we wrap their name in a list item, push it onto an array, then we join the list items into a string and wrap that in ordered list tags.
+And here is the most straightforward procedural solution to this problem that I could come up with. Now in the big scheme of things, this code is not that bad. But it has two problems. First, it violates the single responsibility principle, which states that code should have one and only one reason to change. This code knows a lot about other things: it knows about the structure of a person object. It knows that we're rendering an HTML list. It knows that we're joining strings on newlines. The second problem is, in order to understand what it's doing I have to execute it in my head, which is not that hard, but if I encounter 100 functions that look like this over the course of my day, my brain is going to get tired of executing code, because it's not built for that. It's built for understanding patterns, and the patterns that are in this code are not obvious.
 
-The first thing to notice is that it's kind of ugly but there's not really an obvious opportunity for refactoring. Sure, there's a tiny bit of duplication. We can pull that out.
+So let's extract some functions from this code so that the patterns are explicit and the responsibilities are separated.
 
----
-
-class: middle
-
-```javascript
-function wrapInTag(tagName, string) {
-  return '<' + tagName + '>' + string + '</' + tagName + '>'
-}
-
-function renderLeaderboard(people) {
-  let listItems = []
-  for (let i = 0; i < people.length; i++) {
-    listItems[i] = wrapInTag('li', people[i].name)
-  }
-  return wrapInTag('ol', listItems.join('\n'))
-}
-```
-
-???
-
-And maybe this is slightly better. Honestly, I think it's probably not. And I think this is where a lot of people get stuck with refactoring, because they see code that's a little bit ugly but has no duplication, and they say "well, I guess that's as good as it gets". And this brings me to my first conclusion,
-
----
-
-class: center, middle
-
-# 2. Remove Duplication
-
-???
-
-which is that refactoring consists of two steps, and removing duplication is only step two.
-
----
-
-class: center, middle
-
-# 1. Create Testable Units of Code
-# 2. Remove Duplication
-
-???
-
-First you have to think about the units of code that you want to exist in your design. And if you're writing unit tests, they'll give you feedback about whether your design is any good. Then you pull the ugly code apart into those units. This will create duplication! But that's okay, because we can clean it up in step 2.
+Here are the steps:
 
 ---
 
@@ -214,6 +171,8 @@ function wrapInOrderedList() {
   /* ... */
 }
 ```
+
+
 
 ---
 
