@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ben Christel - Convergent Evolution</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      .remark-code {
+        font-size: 24px;
+        line-height: 125%;
+      }
+
+      .hljs-default .hljs {
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Convergent Evolution in Programming Paradigms
+
+???
+
+I've noticed that a popular topic of debate on the internet is "which paradigm is better, object oriented or functional programming", and I want to make the case that FP and OO are not actually all that different in practice, even though they arise from very different theoretical schools of thought.
+
+???
+
+In theory, there's a big difference between OO and FP. OO says this:
+
+---
+
+class: center
+
+## &nbsp;
+
+## &nbsp;
+
+## OO: A program is a bunch of stateful components sending messages to each other.
+
+???
+
+Object oriented programming says this:
+
+Think of a program as a bunch of stateful components sending messages to each other.
+
+And FP says this:
+
+--
+
+## FP: A program is a mathematical expression.
+
+???
+
+And based solely on those theories, it seems like OO and FP should be really different, right? But we're programmers, and we deal with solving practical problems, not just theory, and we find ourselves creating similar structures regardless of what paradigm we're supposedly using. The rest of this talk will be examples of this kind of convergent evolution.
+
+---
+
+class: center, middle
+
+# Functions as Values
+
+???
+
+One of the core concepts of FP is that functions are values, just like numbers or strings.
+
+---
+
+class: center, middle
+
+```javascript
+var add1 = function(x) {
+	return x + 1
+}
+
+[1, 2, 3].map(add1) // returns [2, 3, 4]
+```
+
+ You can have variables that hold references to them, you can pass them in to other function calls, etc. I've talked to OO programmers who get hung up on this, but really, this kind of function is just an object that has behavior but no state. And OO has this concept too, of objects that have behavior but no state. They're often called services.
+
+```java
+import java.util.List;
+import java.util.ArrayList;
+
+public class HelloWorld{
+     public static void main(String []args){
+        List<Integer> ints = new ArrayList<>();
+        ints.add(1);
+        ints.add(2);
+        ints.add(3);
+        
+        System.out.println(new Mapper<Integer, Integer>().op(new Adder(), ints));
+        // prints [2, 3, 4]
+     }
+}
+
+interface UnaryFunction<I, O> {
+    public O op(I input);
+}
+
+class Adder implements UnaryFunction<Integer, Integer> {
+	public Integer op(Integer x) {
+		return x + 1;
+	}
+}
+
+class Mapper<I, O> {
+	public List<O> op(UnaryFunction<I, O> f, List<I> xs) {
+		List<O> out = new ArrayList<>();
+		for (int i = 0; i < xs.size(); i++) {
+			out.add(f.op(xs.get(i)));
+		}
+		return out;
+	}
+}
+```
+
+--
+
+# Services
+
+(insert Java example)
+
+So if you're a functional programming fan and you're working on a Java project, don't get freaked out by all the "Services" floating around. They're just functions. They have behavior and no state. Runnables are kind of similar. If you ever see someone create an anonymous inner subclass of Runnable and you're like "what the heck", don't worry, this is just Java's adorably verbose way of crafting an anonymous function.
+
+---
+
+class: center, middle
+
+# Factories
+
+???
+
+Who here loves factories?
+
+And who loves curried functions?
+
+So curried functions are a functional programming concept. They're functions that, instead of taking a list of multiple arguments, take those arguments one at a time in a series of chained calls. The transformation is not difficult to do; in fact you can define a curried function in terms of its non-curried version. This doesn't seem that useful the way I've shown it here, but the advantage of curried functions is that the calls can be separated in space and time. So I can set up my HTTP service with the Google domain and credentials, and what I get back from this first call is a function that takes an endpoint and calls that endpoint on the authenticated Google API.
+
+This can be a little mind-bending if you're coming from an OO language, but don't sweat it. Curried functions are just factories -- more specifically, they're service factories. They're a way of setting up a function (that is, an object that has behavior and no state, aka a service) with some part of its behavior predetermined. So our example up here is just an HttpServiceFactory.
+
+If you're coming from a functional background and long Java class names scare you, don't freak out. Factories are just curried functions. The long names are there to make up for the multiple levels of indirection you have to trace through to figure out what's going on.
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
