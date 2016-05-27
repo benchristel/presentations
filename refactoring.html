@@ -27,354 +27,233 @@
   </head>
   <body>
     <textarea id="source">
-class: center, middle
-      
-# Patterns for Functional Refactoring
-
-???
-
-Those of you who have paired with me know that I love refactoring. Almost as much as I love JavaScript, which is more than any sane person should, probably. So of course this talk is about refactoring JavaScript.
-
----
-
-class: middle
-
-???
-
-So I came up with a really simple refactoring kata for this talk. I call it the "leaderboard" problem just to give it some flavor, but really the problem is - you have an array of person objects, and you want to render it as an HTML list, like this.
-
---
-
-```javascript
-var people = [
-  {name: 'Paxicorn'},
-  {name: 'Varsuvius1337'}
-  {name: 'xx_EliasTheGreat_xx'}
-]
-```
-
---
-
-```html
-<ol>
-  <li>Paxicorn</li>
-  <li>Varsuvius1337</li>
-  <li>xx_EliasTheGreat_xx</li>
-</ol>
-```
-
----
 
 class: middle
 
 ```javascript
-function renderLeaderboard(people) {
-  let listItems = []
-  for (let i = 0; i < people.length; i++) {
-    listItems[i] = '<li>' + people[i].name + '</li>'
+function sortCustomersByName (customers) {
+  customers.sort(function (a, b) {
+    if (a.name > b.name) return 1
+    if (a.name < b.name) return -1
+    return 0
+  })
+}
+
+function sortTransactionsByDate (transactions) {
+  transactions.sort(function (a, b) {
+    if (a.date > b.date) return 1
+    if (a.date < b.date) return -1
+    return 0
+  })
+}
+```
+
+---
+class: middle
+
+class: middle
+
+```javascript
+function compare (a, b) {
+  if (a > b) return 1
+  if (a < b) return -1
+  return 0
+}
+
+function sortCustomersByName (customers) {
+  customers.sort(function (a, b) {
+    return compare(a.name, b.name)
+  })
+}
+
+function sortTransactionsByDate (transactions) {
+  transactions.sort(function (a, b) {
+    return compare(a.date, b.date)
+  })
+}
+```
+
+---
+class: middle
+
+```javascript
+function compare (a, b) {
+  if (a > b) return 1
+  if (a < b) return -1
+  return 0
+}
+
+function makeComparator (property) {
+  return function(a, b) {
+    return compare(a[property], b[property])
   }
-  return '<ol>' + listItems.join('\n') + '</ol>'
+}
+
+function sortCustomersByName (customers) {
+  customers.sort(makeComparator('name'))
+}
+
+function sortTransactionsByDate (transactions) {
+  transactions.sort(makeComparator('date'))
 }
 ```
 
-???
-
-And here is the most straightforward procedural solution to this problem that I could come up with. Now in the big scheme of things, this code is not that bad. But it has two problems. First, it violates the single responsibility principle, which states that code should have one and only one reason to change. This code knows a lot about other things: it knows about the structure of a person object. It knows that we're rendering an HTML list. It knows that we're joining strings on newlines. The second problem is, in order to understand what it's doing I have to execute it in my head, which is not that hard, but if I encounter 100 functions that look like this over the course of my day, my brain is going to get tired of executing code, because it's not built for that. It's built for understanding patterns, and the patterns that are in this code are not obvious.
-
-So let's extract some functions from this code so that the patterns are explicit and the responsibilities are separated.
-
-Here are the steps:
-
 ---
-
-class: middle
-
-1. &nbsp;
-2. &nbsp;
-3. &nbsp;
-4. &nbsp;
-
-???
-
-So when I start thinking about how to decompose this problem into testable units of code, my instict is to think of the solution as a series of steps.
-
----
-
-class: middle
-
-1. Get names
-2. &nbsp;
-3. &nbsp;
-4. &nbsp;
-
-???
-
-First we get the name property of each person
-
----
-
-class: middle
-
-1. Get names
-2. Wrap in `<li>` tags
-3. &nbsp;
-4. &nbsp;
-
-???
-
-We wrap each name in an LI tag
-
----
-
-class: middle
-
-1. Get names
-2. Wrap in `<li>` tags
-3. Join on newlines
-4. &nbsp;
-
-???
-
-Concatenate them into a string
-
----
-
-class: middle
-
-1. Get names
-2. Wrap in `<li>` tags
-3. Join on newlines
-4. Wrap in an `<ol>` tag
-
-???
-
-And wrap the whole thing in an ordered list.
-
----
-
 class: middle
 
 ```javascript
-function getNames() {
-  /* ... */
-}
-
-function wrapInListItems() {
-  /* ... */
-}
-
-function joinOnNewlines() {
-  /* ... */
-}
-
-function wrapInOrderedList() {
-  /* ... */
-}
-```
-
-
-
----
-
-class: middle
-
-```javascript
-function renderLeaderboard(people) {
-  return wrapInOrderedList(
-    joinOnNewlines(
-      wrapInListItems(
-        getNames(people)
-      )
-    )
-  )
-}
-```
-
-???
-
-So we can easily express each of these steps as a function, and compose them in the obvious way. When we do that, we get a pyramid of doom, which is not nice, but fortunately we can write a higher order function to build the pyramid for us. I call this function `pipeline`, because it reminds me of the way the Unix pipe operator composes functions, although `buildPyramidOfDoom` would be a pretty badass name too.
-
----
-
-class: middle
-
-```javascript
-let renderLeaderboard = pipeline
-  ( getNames
-  , wrapInListItems
-  , joinOnNewlines
-  , wrapInOrderedList
-  )
-```
-
-???
-
-Here's how we can use `pipeline` to build our `renderLeaderboard` function. This lets us write the names of the steps in order, instead of backwards as in the pyramid of doom. Also note that the definition of our render function is now completely declarative - there's no parameter list, no return statement, no function keyword - `pipeline` is building the whole thing for us.
-
----
-
-class: middle
-
-```javascript
-let pipeline = (...args) =>
-  args.reduce(compose, identity)
-
-let compose = (f, g) => x => g(f(x))
-
-let identity = x => x
-```
-
-???
-
-Here's how `pipeline` is implemented. I'm going to skip over this part because it's not really interesting. If you care, the slides are on github.
-
----
-
-class: middle
-
-```javascript
-function getNames(people) {
-  let names = []
-  for (let i = 0; i < people.length; i++) {
-    names[i] = people[i].name
+function makeComparator (property) {
+  return function(a, b) {
+    let aVal = a[property]
+    let bVal = b[property]
+    if (aVal > bVal) return 1
+    if (aVal < bVal) return -1
+    return 0
   }
-  return names
 }
 
-function wrapInListItems(strings) {
-  let listItems = []
-  for (let i = 0; i < strings.length; i++) {
-    listItems[i] = '<li>' + strings[i] + '</li>'
+function sortCustomersByName (customers) {
+  customers.sort(makeComparator('name'))
+}
+
+function sortTransactionsByDate (transactions) {
+  transactions.sort(makeComparator('date'))
+}
+```
+
+---
+class: middle
+
+```javascript
+function by (property) {
+  return function(a, b) {
+    let aVal = a[property]
+    let bVal = b[property]
+    if (aVal > bVal) return 1
+    if (aVal < bVal) return -1
+    return 0
   }
-  return listItems
 }
 
-function joinOnNewlines(strings) {
-  return strings.join('\n')
+function sortCustomersByName (customers) {
+  customers.sort(by('name'))
 }
 
-function wrapInOrderedList(string) {
-  return '<ol>' + string + '</ol>'
-}
-```
-
-???
-
-So I didn't show the implementation of our four step functions earlier, but now that we've defined the units of our system it's time to start reducing duplication. And as promised, we now have more duplication! The loop's duplicated. So let's replace that with a call to map
-
----
-
-```javascript
-function getNames(people) {
-  return people.map(person => person.name)
-}
-
-function wrapInListItems(strings) {
-  return strings.map(string => '<li>' + string + '</li>')
-}
-
-function joinOnNewlines(strings) {
-  return strings.join('\n')
-}
-
-function wrapInOrderedList(string) {
-  return '<ol>' + string + '</ol>'
+function sortTransactionsByDate (transactions) {
+  transactions.sort(by('date'))
 }
 ```
 
-???
-
-and pull out a `wrapInHtmlTag` function again
-
 ---
-
-```javascript
-function getNames(people) {
-  return people.map(person => person.name)
-}
-
-function wrapInListItems(strings) {
-  return strings.map(string => wrapInHtmlTag('li', string))
-}
-
-function joinOnNewlines(strings) {
-  return strings.join('\n')
-}
-
-function wrapInOrderedList(string) {
-  return wrapInHtmlTag('ol', string)
-}
-```
-
-???
-
-This looks like it's as DRY as it's going to get. But there's still duplication -- there are two calls to `map`, and that means that we've increased duplication relative to our original procedural implementation. So we've just spun our wheels and gotten nowhere.
-
-We also have this problem where even though we've pulled out all these nice, testable units, there's still duplication in our tests. When we test getNames, we have to build an array of people in our test setup, because the unit we're testing calls `map`. Same for wrapInListItems, we have to build an array. This extra setup we have to do is cruft, because we don't care about testing `map`. `map` is a library function, we don't need to test it, and we certainly don't need multiple tests covering it, which is what we've got here.
-
-There's also the question of whether we want to have unit tests for wrapInHtmlTag. It's covered by two other tests, so maybe we don't need to test it, but it's a public interface, so maybe it should be tested just to make sure no one breaks it? But then, we again have duplicated coverage.
-
-These problems happened because every time we saw duplication, we just extracted a function and called it, and that created a dependency. Functions with dependencies are annoying to test because you either have to stub the dependency or have tests that cover both the unit you're testing and all its dependencies.
-
-So how do we get rid of these dependencies? Let's start with `map`. We've been thinking of `map` as a method that takes a function, applies it to each element of a collection, and returns a collection of the results. This is the way `map` works in Ruby, JavaScript and Java 8, but functional programming provides a much more powerful definition of `map`.
-
----
-
-class: center, middle
-
-# Map takes a function that operates on single values and creates an upgraded version that works on arrays.
-
-???
-
-Once we have this version of map, we can rewrite our pipeline like this:
-
----
-
 class: middle
 
 ```javascript
-let renderLeaderboard = pipeline
-  ( map(getName)
-  , map(wrapInListItem)
-  , joinOnNewlines
-  , wrapInOrderedList
-  )
+function by (property) {
+  return function(a, b) {
+    let aVal = a[property]
+    let bVal = b[property]
+    if (aVal > bVal) return 1
+    if (aVal < bVal) return -1
+    return 0
+  }
+}
+
+// inlined
+customers.sort(by('name'))
+
+// inlined
+transactions.sort(by('date'))
 ```
 
-???
-
 ---
-
 class: middle
 
 ```javascript
-let renderLeaderboard = pipeline
-  ( map(getName)
-  , map(wrapInTag('li'))
-  , joinOnNewlines
-  , wrapInTag('ol')
-  )
+function by (getSortKey) {
+  return function(a, b) {
+    let aVal = getSortKey(a)
+    let bVal = getSortKey(b)
+    if (aVal > bVal) return 1
+    if (aVal < bVal) return -1
+    return 0
+  }
+}
+
+function prop (propName) {
+  return function (obj) {
+    return obj[propName]
+  }
+}
+
+// inlined
+customers.sort(by(prop('name')))
+
+// inlined
+transactions.sort(by(prop('date')))
+```
+
+---
+class: middle
+
+```javascript
+customers.map(prop('name'))
 ```
 
 ???
 
-Here are the units that we ended up with:
+But now the PM comes to you and says, "we actually wanted the transactions in descending order by date, with the most recent first". 
 
 ---
+class: middle
 
-class: center, middle
+```javascript
+function desc (comparator) {
+  return function (a, b) {
+    return -comparator(a, b)
+  }
+}
+```
 
-# pipeline
-# map
-# getName
-# wrapInTag
-# joinOnNewlines
+---
+class: middle
+
+```javascript
+transactions.sort(desc(by(prop('date'))))
+```
 
 ???
 
-There is no duplication between any of these units. There are no dependencies between them. That means they can be unit-tested with no duplicate coverage.
+And now the parentheses look a little ugly but the PM's happy because you just shipped that fix in 5 minutes and you didn't have to change any existing code to do it.
 
-In my opinion, this is the only version of this code that's actually better than the procedural version. But we had to take a few big leaps to get there. So the moral of the story is, don't refactor without a plan.
+---
+class: middle
+
+# Keep Calm and Obey Open-Closed
+
+???
+
+And this brings me to my final point which is that when you have these tiny, composable units of functionality, you actually can obey the open-closed principle in a way that would be really awkward to do with just OO.
+
+---
+class: middle
+
+
+```javascript
+let desc = comparator => (a, b) => 
+  comparator(a, b)
+
+let by = getSortKey => (a, b) => {
+  let aVal = getSortKey(a)
+  let bVal = getSortKey(b)
+  if (aVal > bVal) return 1
+  if (aVal < bVal) return -1
+  return 0
+}
+
+let prop = propName => obj => 
+  obj[propname]
+```
+
 
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
