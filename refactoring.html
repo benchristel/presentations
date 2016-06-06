@@ -28,6 +28,17 @@
   <body>
     <textarea id="source">
 
+class: center, middle
+
+# Refactoring JavaScript for Radical Composability
+
+???
+
+Hello! My talk today is about refactoring and functional programming, two topics that I am always excited to talk about. The refactoring I'm going to show you is based on a true story. I actually did a refactor very similar to this on a recent client project.
+
+So here's the code we start out with.
+
+---
 class: middle
 
 ```javascript
@@ -48,66 +59,47 @@ function sortTransactionsByDate (transactions) {
 }
 ```
 
----
-class: middle
+???
 
-class: middle
+This looks like it's for some kind of e-commerce site, because we have customers and transactions, and we're sorting them, probably because we want to render a web page with the sorted lists. The way the sort method works in JavaScript is, you give it a comparator function that takes two items from the list and returns a number indicating their relative order. So if A should come before B, we return -1. If B comes before A, we return positive 1. And if they're in some sense equal and it doesn't matter how we order them, we return zero. And sort will call this comparator function with each pair of elements until it's determined the order for the whole array. Also, sort modifies the array in place, which is why we're not returning anything from our two public functions here.
 
-```javascript
-function compare (a, b) {
-  if (a > b) return 1
-  if (a < b) return -1
-  return 0
-}
-
-function sortCustomersByName (customers) {
-  customers.sort(function (a, b) {
-    return compare(a.name, b.name)
-  })
-}
-
-function sortTransactionsByDate (transactions) {
-  transactions.sort(function (a, b) {
-    return compare(a.date, b.date)
-  })
-}
-```
+So, if we're in a refactoring mindset, the first thing we notice is that there's duplication here. Like, these functions are basically identical except for the variable names and the property they're sorting by. So let's extract a `sortBy` function that takes those two things as parameters.
 
 ---
 class: middle
 
 ```javascript
-function compare (a, b) {
-  if (a > b) return 1
-  if (a < b) return -1
-  return 0
-}
-
-function makeComparator (property) {
-  return function(a, b) {
-    return compare(a[property], b[property])
-  }
+function sortBy (property, array) {
+  array.sort(function (a, b) {
+    if (a[property] > b[property]) return 1
+    if (a[property] < b[property]) return -1
+    return 0
+  })
 }
 
 function sortCustomersByName (customers) {
-  customers.sort(makeComparator('name'))
+  sortBy('name', customers)
 }
 
 function sortTransactionsByDate (transactions) {
-  transactions.sort(makeComparator('date'))
+  sortBy('date', transactions)
 }
 ```
+
+???
+
+So here's what that looks like. And this is about as DRY as we can get if we're using a procedural style. The duplication is gone. But I feel like sortBy now has too many responsibilities. It knows how to sort, and it knows that we're sorting by a property. And the fact that sortBy has two responsibilities makes me worry that it will someday attract more. If we need different sorting behavior, either sortBy will take on those new responsibilities or it will delegate to some other general sort function that has multiple responsibilities. And of course each time we change this code to accommodate new features, there's a chance we'll mess up and break an existing feature.
+
+So let's try a different approach. Instead of extracting a sortBy function, I'm going to extract just the idea of comparing by a property.
 
 ---
 class: middle
 
 ```javascript
 function makeComparator (property) {
-  return function(a, b) {
-    let aVal = a[property]
-    let bVal = b[property]
-    if (aVal > bVal) return 1
-    if (aVal < bVal) return -1
+  return function (a, b) {
+    if (a[property] > b[property]) return 1
+    if (a[property] < b[property]) return -1
     return 0
   }
 }
@@ -121,16 +113,18 @@ function sortTransactionsByDate (transactions) {
 }
 ```
 
+???
+
+So now we have this function makeComparator that, well, it makes a comparator function for us based on a property name.
+
 ---
 class: middle
 
 ```javascript
 function by (property) {
-  return function(a, b) {
-    let aVal = a[property]
-    let bVal = b[property]
-    if (aVal > bVal) return 1
-    if (aVal < bVal) return -1
+  return function (a, b) {
+    if (a[property] > b[property]) return 1
+    if (a[property] < b[property]) return -1
     return 0
   }
 }
@@ -192,6 +186,12 @@ customers.sort(by(prop('name')))
 transactions.sort(by(prop('date')))
 ```
 
+???
+
+And now our `by` function is fully general, and perhaps more importantly, all the knowledge about what a customer or a transaction is and how to sort it is in one place. Before, this code down here knew that it was sorting customers, but this code up here knew that it was sorting some type of object. So the responsibility of knowing what we're sorting was previously sort of spread out, and now it's all concentrated down here.
+
+Another nice outcome of this is that our prop function is generally useful, it's not just for sorting. For example, if we have a list of customers and we want all of their names, we can just do this:
+
 ---
 class: middle
 
@@ -201,7 +201,21 @@ customers.map(prop('name'))
 
 ???
 
-But now the PM comes to you and says, "we actually wanted the transactions in descending order by date, with the most recent first". 
+customers map prop name. And I think this is really cool, because when we made `prop`, we didn't intend for it to compose with `map` this way. Like, actually, when I wrote the first draft of this talk, I didn't intend for this to happen. But I think this often happens when you break a program down into tiny units with laser-focused responsibilites--you end up with this kind of fortuitous composition.
+
+So we're pretty happy now, right? Our program's all DRYed out, looking very nice. But now the PM comes to us and says, "um, we actually wanted the transactions in *descending* order by date, with the most recent first". 
+
+---
+
+class: center, middle
+
+![throwing it away](http://i.imgur.com/i3IfafU.gif)
+
+???
+
+And now you're like, "aw, crap", right? Because we just refactored our code to fit this problem like a glove, and now the problem's changed! And often, when that happens, you look at your code and you're like, well, this has to go, and this isn't useful anymore, and this function that we pulled out gets inlined because now it depends on this. And you end up having to rethink the entire design of your program because your original design was great for the previous problem but it was too rigid. 
+
+But fortunately, that's not the case here. We just define a function that expresses the concept of a descending sort.
 
 ---
 class: middle
@@ -213,6 +227,10 @@ function desc (comparator) {
   }
 }
 ```
+
+???
+
+I call it `desc`. It takes a comparator, and returns a new comparator that inverts the old one. So whatever number was returned by comparing a and b, we just negate it, so now the sort goes in the other direction. And we can call it like this.
 
 ---
 class: middle
@@ -226,34 +244,13 @@ transactions.sort(desc(by(prop('date'))))
 And now the parentheses look a little ugly but the PM's happy because you just shipped that fix in 5 minutes and you didn't have to change any existing code to do it.
 
 ---
-class: middle
+class: center, middle
 
-# Keep Calm and Obey Open-Closed
+![Keep Calm and Compose All The Things](keep_calm_and_compose_all_the_things.png)
 
 ???
 
 And this brings me to my final point which is that when you have these tiny, composable units of functionality, you actually can obey the open-closed principle in a way that would be really awkward to do with just OO.
-
----
-class: middle
-
-
-```javascript
-let desc = comparator => (a, b) => 
-  comparator(a, b)
-
-let by = getSortKey => (a, b) => {
-  let aVal = getSortKey(a)
-  let bVal = getSortKey(b)
-  if (aVal > bVal) return 1
-  if (aVal < bVal) return -1
-  return 0
-}
-
-let prop = propName => obj => 
-  obj[propname]
-```
-
 
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
