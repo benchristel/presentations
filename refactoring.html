@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Ben Christel - ES6</title>
+    <title>Ben Christel - Refactoring Javascript</title>
     <meta charset="utf-8">
     <style>
       @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
@@ -23,6 +23,14 @@
       .hljs-default .hljs {
         overflow: hidden;
       }
+
+      .full-image {
+        background-size:contain;
+        background-position:center;
+        background-repeat:no-repeat;
+        width:100%;
+        height:100%;
+      }
     </style>
   </head>
   <body>
@@ -34,9 +42,86 @@ class: center, middle
 
 ???
 
-Hello! My talk today is about refactoring and functional programming, two topics that I am always excited to talk about. The refactoring I'm going to show you is based on a true story. I actually did a refactor very similar to this on a recent client project.
+My talk today is about two different types of program structure, and of course,
+since I'm a very opinionated person, I'm going to make the argument that one of
+these structures is better than the other.
 
-So here's the code we start out with.
+In particular I want to talk about two different types of composition, which I'm
+going to call Delegation and Radical Composition, for lack of a better term.
+
+---
+
+class: center, middle
+
+# Delegation
+
+???
+
+Delegation is extremely common in real-world code, and it basically looks like this:
+
+---
+
+class: center, middle
+
+<div style="background-image:url(Delegation.jpg);" class="full-image"></div>
+
+???
+
+Dependency injection lets you loosen these hard links a little, so that you could in
+theory swap out something else for B that implements the same interface.
+The problem is that dependency injection actually perpetuates the tight coupling it's
+supposed to fix, because now instead of hardcoded references you have a DI framework
+that builds everything for you, so it's actually not easy to swap out module B. You have
+to create a new dependency provider.
+
+module A delegates some of its responsibility to module B, which delegates to C, and so on.
+
+This type of code is easy to write but it has significant weaknesses.
+
+One thing that should be fairly obvious is that A will not work if it doesn't have a B, and B won't work
+if it doesn't have a C.
+
+This prevents these modules from really being reusable.
+
+Dependency injection frameworks let you loosen these
+seams a little so you can unit test each module, and languages like Java give
+you interfaces which help you depend on abstractions. But the promise of interfaces
+doesn't really hold up when you have dependency injection.
+Ideally, instead of A depending on a class B, it depends on an interface, and then
+you can have multiple implementors of that interface that can be swapped out to
+reconfigure the behavior of A. That's the ideal. But you hardly ever see it
+in a production system, and the reason is that dependency injection perpetuates
+the tight coupling it's supposed to solve. In a system with dep injection, if you need an instance of A,
+you don't assemble it yourself, you ask the injector for it. So in order to swap out B
+for a different implementation, you need a new dependency provider.
+
+---
+
+class: center, middle
+
+# Radical Composition
+
+???
+
+So that was Delegation. Let's talk about Radical Composition.
+
+---
+
+class: center, middle
+
+<div style="background-image:url(Radical_Composition.jpg);" class="full-image"></div>
+
+???
+
+Radical composition looks like this. Instead of a deep dependency tree, we
+have a wide flat one instead. Module A takes the other modules and somehow
+plugs them into each other to do some work. But modules B, C, and D don't
+know about each other at all. Because there's no dependency between these
+three they're all reusuable, and you don't need dependency injection.
+A can just create B C and D easily.
+
+So that was very abstract. Let's look at some code. Along the way
+we'll encounter some examples of why Radical Composition is preferable to Delegation.
 
 ---
 class: middle
@@ -61,9 +146,20 @@ function sortTransactionsByDate (transactions) {
 
 ???
 
-This looks like it's for some kind of e-commerce site, because we have customers and transactions, and we're sorting them, probably because we want to render a web page with the sorted lists. The way the sort method works in JavaScript is, you give it a comparator function that takes two items from the list and returns a number indicating their relative order. So if A should come before B, we return -1. If B comes before A, we return positive 1. And if they're in some sense equal and it doesn't matter how we order them, we return zero. And sort will call this comparator function with each pair of elements until it's determined the order for the whole array. Also, sort modifies the array in place, which is why we're not returning anything from our two public functions here.
+And I'd like you to imagine that we're building an e-commerce site of some
+description, and we have this page where we display sorted lists of customers
+and transactions. So of course we have this javascript code. Customers
+are sorted by name, and transactions are sorted by date.
 
-So, if we're in a refactoring mindset, the first thing we notice is that there's duplication here. Like, these functions are basically identical except for the variable names and the property they're sorting by. So let's extract a `sortBy` function that takes those two things as parameters.
+And the way the sort API works in JavaScript is that you give the sort
+method this comparator function that takes two elements from the array
+and just returns an integer flag telling you which one is bigger. And
+this function gets called repeatedly with different elements from the array
+until the sort algorithm has determined the ordering for the entire list.
+
+And obviously this code is almost the same in both cases, so it's a clear
+candidate for refactoring. So let's just do the most obvious thing to
+remove the duplication.
 
 ---
 class: middle
@@ -88,7 +184,18 @@ function sortTransactionsByDate (transactions) {
 
 ???
 
-So here's what that looks like. And this is about as DRY as we can get if we're using a procedural style. The duplication is gone. But I feel like sortBy now has too many responsibilities. It knows how to sort, and it knows that we're sorting by a property. And the fact that sortBy has two responsibilities makes me worry that it will someday attract more. If we need different sorting behavior, either sortBy will take on those new responsibilities or it will delegate to some other general sort function that has multiple responsibilities. And of course each time we change this code to accommodate new features, there's a chance we'll mess up and break an existing feature.
+We can create a sortBy method that takes a property name and a list.
+And this is about as DRY as we can get.
+
+But this is delegation.
+
+And there's a problem. Eventually, we will run into other types of sorting problems.
+Maybe we need to sort in descending order somewhere, or maybe we need to sort by
+multiple criteria at once. And those responsibilities will either get added to sortBy,
+or sortBy will become dependent on some other, more general sorting function.
+
+And that's bad because each time we add behavior to that general function, we risk
+breaking what's already there.
 
 So let's try a different approach. Instead of extracting a sortBy function, I'm going to extract just the idea of comparing by a property.
 
@@ -203,21 +310,8 @@ customers.map(prop('name'))
 
 customers map prop name. And I think this is really cool, because when we made `prop`, we didn't intend for it to compose with `map` this way. Like, actually, when I wrote the first draft of this talk, I didn't intend for this to happen. But I think this often happens when you break a program down into tiny units with laser-focused responsibilites--you end up with this kind of fortuitous composition.
 
-So we're pretty happy now, right? Our program's all DRYed out, looking very nice. But now the PM comes to us and says, "um, we actually wanted the transactions in *descending* order by date, with the most recent first". 
-
 ---
 
-class: center, middle
-
-![throwing it away](http://i.imgur.com/i3IfafU.gif)
-
-???
-
-And now you're like, "aw, crap", right? Because we just refactored our code to fit this problem like a glove, and now the problem's changed! And often, when that happens, you look at your code and you're like, well, this has to go, and this isn't useful anymore, and this function that we pulled out gets inlined because now it depends on this. And you end up having to rethink the entire design of your program because your original design was great for the previous problem but it was too rigid. 
-
-But fortunately, that's not the case here. We just define a function that expresses the concept of a descending sort.
-
----
 class: middle
 
 ```javascript
@@ -251,6 +345,13 @@ class: center, middle
 ???
 
 And this brings me to my final point which is that when you have these tiny, composable units of functionality, you actually can obey the open-closed principle in a way that would be really awkward to do with just OO.
+
+
+---
+
+class: center, middle
+
+# Thank you!
 
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
