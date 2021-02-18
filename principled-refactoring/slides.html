@@ -27,6 +27,12 @@
         font-weight: normal;
       }
 
+      h1 {
+        padding: 16px;
+        border-top: 1px solid #666;
+        border-bottom: 1px solid #666;
+      }
+
       .remark-code, .remark-inline-code {
         font-family: 'Ubuntu Mono', monospace;
         text-align: left;
@@ -170,9 +176,15 @@ class: center, middle
 
 ???
 
-The theme of this talk is Refactoring, an idea that's been
-around since 1999 or so, when Martin Fowler published this
-book.
+The theme of this talk is Refactoring.
+
+Refactoring's an idea that's been around for a while.
+Martin Fowler published the seminal book on Refactoring in
+1999, but he says the technique is older than that. He just
+documented it.
+
+But the strength of Fowler's book, in my opinion, is that
+he gives us a vocabulary for talking about refactoring.
 
 ---
 
@@ -186,7 +198,8 @@ class: middle
 
 ???
 
-In the book, he defines Refactoring as...
+First and foremost, he defines Refactoring itself, as
+"a disciplined technique..."
 
 ---
 
@@ -199,7 +212,8 @@ class: middle
 
 ???
 
-He goes on to say,
+He also identifies this notion of refactorINGS, which
+are the little atomic changes we do to code to clean it up.
 
 ---
 
@@ -214,22 +228,11 @@ class: center, middle
 
 ???
 
-Little atomic operations like...
+In the book he names 66 of these, things like...
 
 ---
 
 class: middle
-
-> Since each refactoring is small, it&rsquo;s less likely to go
-> wrong.
-
-<cite>Martin Fowler</cite>
-
----
-
-class: middle
-
-### Why refactor?
 
 > Refactoring lowers the cost of enhancements.
 
@@ -237,18 +240,18 @@ class: middle
 
 ???
 
-Most importantly, he tells us why refactoring is valuable.
-Refactoring lowers the cost of enhancements.
+But most importantly, he tells us why refactoring is
+valuable. Refactoring lowers the cost of enhancements.
 
 ---
 
 class: middle
 
-✅ &nbsp;High-level values
+✅ &nbsp;High-level values (ease of change)
 
 &nbsp;&nbsp;&nbsp;&nbsp;...
 
-✅ &nbsp;Low-level techniques.
+✅ &nbsp;Low-level techniques (refactorings)
 
 ???
 
@@ -260,20 +263,23 @@ and the low-level techniques of refactoring.
 
 class: middle
 
-✅ &nbsp;High-level values
+✅ &nbsp;High-level values (ease of change)
 
 ❓&nbsp;Strategy
 
-✅ &nbsp;Low-level techniques.
+✅ &nbsp;Low-level techniques (refactorings)
 
 ???
 
 What I think is missing from the conversation though is
-discussion of **strategy**. We can learn all the
-refactorings and we can value maintainable code, but that
-doesn't tell us which refactoring to apply at any given
-moment as we're working. And there are a *lot* of
-refactorings to choose from. 63, last time I counted.
+discussion of **strategy**. We may value code that's
+easy to change, and we may know procedurally how to
+refactor, but that doesn't tell us which refactorings to
+apply at any given moment as we're working.
+
+Refactoring often feels like a maze of paths with no clear
+exit. It's hard to know which way to go, and even hard to
+know when we've reached the goal.
 
 ---
 
@@ -315,8 +321,8 @@ class: center, middle
 
 ???
 
-You might say, "hold up, refactoring already has principles!"
-or at least, *a* principle.
+You might say, "wait a minute, refactoring already has
+principles!" or at least, *a* principle.
 
 ---
 
@@ -328,7 +334,9 @@ Don&rsquo;t Repeat Yourself
 
 ???
 
-DRY. Don't repeat yourself.
+DRY, right? Don't repeat yourself!
+
+So let's see how DRY works with a code example.
 
 ---
 
@@ -366,12 +374,13 @@ DRY. Don't repeat yourself.
 
 ???
 
-Here's how DRY works.
+Here's the code that's the protagonist of today's talk.
+What it does is it constructs some command line arguments
+that are going to be passed to a compiler.
 
-We start with this code, which
-constructs command line arguments to pass to a compiler.
-
-We notice these two obviously duplicated chunks.
+If we're using the DRY principle, the first thing we're
+likely to notice about this code is these two obviously
+duplicated chunks.
 
 ---
 
@@ -432,10 +441,11 @@ So we pull those out into a function.
 
 ???
 
-Then we can do a replace loop with pipeline and we get this.
+Then we can do a replace loop with pipeline on that function
+and we get this.
 
-Then we notice that these two parts are pretty similar, so
-we pull out a function for that.
+Then we notice that this line is pretty similar to this
+line, so we pull out a function for that.
 
 ---
 
@@ -472,7 +482,7 @@ The duplication is gone. we're done.
 I'm not going to claim that this isn't an improvement over
 the original code, but I think we've gone up kind of a dead
 end here. We've reached a local optimum from which it's
-hard to see a better shape for this code.
+hard to see our way to a better design.
 
 And this is the core of the problem with DRY as a principle.
 DRY leads to
@@ -481,14 +491,19 @@ while leaving quite a bit of **hidden** duplication globally.
 Over time, that duplication sucks the life out of a
 codebase.
 
-So if we're going to do better than this, we need some
-additional principles.
+But if we want to do better than this—and do better
+**reliably**, not just by chance—we need some
+additional principles to guide us.
 
 ---
 
 class: center, middle
 
 ## Some additional principles
+
+???
+
+So here are some additional principles.
 
 ---
 
@@ -502,9 +517,12 @@ class: center, middle, black
 
 ???
 
-Here are the principles. I'm going to describe each of them,
-and then I'm going to do a live refactoring demo so you can
-see how they work in practice.
+Directness, symmetry, and rootedness.
+
+So for the rest of the talk, I'm going to define each of
+these, and then I'm going to do a live refactoring demo on
+the code we just saw so you can see how they work in
+practice.
 
 ---
 
@@ -514,22 +532,38 @@ class: center, middle, black
 
 ???
 
+First, Directness.
+
 Directness is a property of code.
 
-By directness, I mean the absence of indirection, whether
-it's functions, variables, or classes.
-The principle of directness counters DRY's tendency to
-greedily extract functions at every opportunity.
+By directness, I mean the absence of indirection.
+Often when we're refactoring, it's tempting to extract new
+functions at every opportunity. But every extracted function
+adds indirection, and indirection imposes a cost on the
+reader. Because now they can't just read the code, they
+have to jump around.
 
-Directness in code is valuable because indirection is
-expensive. Indirection imposes a cost on the reader.
-Because now they can't just read the code, they have to jump
-around.
+---
 
-So when I do the demo, I'm going to follow this principle
-by not creating any new
-functions or classes, and I'm going to remove as many
-variables as I can.
+class: middle
+
+```javascript
+buildArgString("-L", cfg.libdirs)
+// ...
+buildSingleArgString("-L", cfg.libdir)
+```
+
+???
+
+Here's an example: this code, from the DRY refactoring we
+just saw, has two functions. buildArgString actually calls
+buildSingleArgString under the hood, so these two functions
+are doing fundamentally the same kind of thing. But that
+relationship is invisible to someone who's just looking at
+these two lines. They might guess that these functions are
+related, but they won't know for sure unless they look at
+the implementation. The principle of directness says that
+if we can save our readers that uncertainty, we should.
 
 ---
 
@@ -543,7 +577,8 @@ Principle 2 is symmetry.
 
 Symmetry is another property of code.
 
-Code that's symmetrical has a predictable rhythm.
+Code that's symmetrical has a rhythm to it, a predictable
+repeating structure.
 
 ---
 
@@ -570,10 +605,11 @@ download_class.new(uri).execute!
 ???
 
 Here's some symmetrical Ruby. This code downloads a file
-from a URL and the first thing we do is choose an
-appropriate downloader class. The **simple, predictable structure**
-of the case statement makes it really easy to see what's
-**different** about each case.
+from a URL and the first thing it does is choose an
+appropriate downloader class. The case statement has a
+simple, predictable structure—when string, class, when
+string, class—and that makes it really easy
+to see what's **different** about each case.
 
 ---
 
@@ -595,6 +631,43 @@ raise NoSuitableClass, "No class for #{uri}" unless download_class
 download_class.new(uri).execute!
 ```
 
+???
+
+To drive the point home here's some asymmetrical code
+that does exactly the same thing. Here we're using every
+**other** type of conditional Ruby has, and there's no
+consistent pattern to it. You can't comprehend this code
+at a glance.
+
+---
+
+class: middle
+
+## WET Symmetry
+
+```ruby
+case uri.scheme
+when "ssh"
+  GitDownload.new(uri).execute!
+when "https"
+  HttpsDownload.new(uri).execute!
+when "sftp"
+  SftpDownload.new(uri).execute!
+else
+  raise NoSuitableClass, "No class for #{uri}"
+end
+```
+
+???
+
+Symmetry works best when it's DRY. Here's a third
+implementation of that same code. Now instead of
+instantiating the class and executing the download once,
+we're doing it in each branch of the case statement. That
+extra duplicated code is noise that makes it harder
+to see the important differences embedded in the repetition.
+So we want to keep our symmetry as DRY as possible.
+
 ---
 
 class: center, middle, black
@@ -603,12 +676,15 @@ class: center, middle, black
 
 ???
 
-The third principle is Rootedness.
+The third principle is Rootedness. Unlike the other
+principles, rootedness isn't a property of code. It's a
+property of change.
 
-Rootedness in the sense of "grassroots". Rather than coming
-up with a vision for how the code should look and then
-imposing it top-down, I'm going to ask the code what _it_
-wants to be.
+When I say "rooted" I want you to think of "grassroots".
+Rooted changes emerge organically from what's already there.
+Rather than coming up with a vision for how the code should
+look and then imposing it top-down, I'm going to ask the
+code what _it_ wants to be.
 
 ---
 
@@ -629,26 +705,35 @@ class: middle
 
 ???
 
-That sounds like a fuzzy-wuzzy, mystical concept, but it's
+That sounds kind of fuzzy-wuzzy and mystical, but it's
 really not: there are **algorithms** for making rooted changes
-to code.
+to code, and here's one of them.
 
-This is one algorithm developed by Sandi Metz and Katrina
-Owen.
+This is from _99 bottles of OOP_ by Sandi Metz and Katrina Owen.
 
 It's three simple steps:
 
-find the things that are most alike,
+find the pieces of code that are most alike, the most
+syntactically similar
 
 Select the smallest difference between them,
 
-and make the smallest change that removes that difference,
-that brings the things closer to being exactly the same.
+and make the smallest change that removes that difference.
+We want to make the things that are almost alike *exactly*
+alike, and once they're exactly alike it's easy to remove
+the duplication.
 
 There are many possible algorithms for rooted change, but
 I chose this one because it leads to code
-that is direct and symmetrical. So it supports our other
-principles.
+that is DRY, direct and symmetrical. So it supports our
+other principles.
+
+The thing I like about algorithms for rooted change
+is that you can pick them up pretty quickly and they don't
+require a lot of creative insight to use. You can pretty
+much just use them and see where they take you. Often I find
+they show me solutions I never would have found just by
+designing at a whiteboard.
 
 ---
 
@@ -721,56 +806,37 @@ function buildSingleArgString(flag, arg) {
 
 ???
 
-Okay, let's reflect on what we just saw. The DRY refactoring
+Okay, let's reflect on where we ended up. The DRY refactoring
 from earlier is on the right, the code we just refactored
-is on the left.
+is on the left. Let's compare them and see how we did.
 
-First I'd like to point out that although DRY was our only
-guiding principle for the refactoring on the right, the one
-on the left arguably has less duplication. On the right, we
-have duplicated function names. So we haven't scored any
-worse on the don't-repeat-yourself front.
+First, let's consider the DRY principle. It seems like there's
+no more duplication on the left than there is on the right,
+so I'd say we've done pretty well on the DRY front.
 
-Second I'd like to focus on the principle of symmetry. You'll
-notice that both implementations make use of a chain of
-conditional statements. But only the code on the left
-is symmetrical.
-
-In the code on the right, each branch of the conditional
-has a different shape. It's hard to see at a glance that
-these four branches are fundamentally doing the same
-kind of thing.
-
-The code on the left has a repeated rhythm that
-draws attention to the important differences between
-the repetitions. (next slide)
-
-How about directness? Well, the code on the right has
-three functions where the code on the left has one, so I'd
+Second, let's talk about directness. The code on the right has
+three functions and five function calls, where the code on
+the left has one and one, so I'd
 say the code on the left is more direct. But notice that
 even though it's one function, it's not monolithic. It
-splits quite cleanly into two pieces. First, we decide what
+splits cleanly into two pieces. First, we decide what
 data we're going to operate on. Then, we invoke a general
-algorithm for processing that data.
+algorithm for processing that data. So we've managed to
+organize our code into small comprehensible units, but
+without introducing indirection, which I think is pretty
+cool.
 
----
+Third, let's look at symmetry. You'll
+notice that both implementations make use of a chain of
+conditional statements, but only the one on the left is
+completely symmetrical. The default value on the right is a
+special case, while on the left it's handled like all the
+others.
 
-class: center, middle
-
-When similar things _look_ similar,<br>important
-differences stand out.
-
-???
-
-The principle of symmetry says, essentially, that when
-similar things **look** similar, the important differences
-stand out.
-
-We want to get rid of all the unimportant, superficial
-differences, so that whatever difference is
-left is both important and obvious.
-
-(previous slide)
+Also note that the code on the right handles the singleton
+`libdir` argument by calling a special function, while the
+code on the left expresses singleness by wrapping the value
+in an array and then just treating it like the other arrays.
 
 <!--
 
@@ -833,7 +899,7 @@ sideshow compared to the question of correctness.
 
 ---
 
-## Security Alert!
+## Shell Injection Alert!
 
 .side-by-side.smaller-font[
 ```javascript
@@ -887,16 +953,10 @@ function buildSingleArgString(flag, arg) {
 
 ???
 
-The fact is, the code on the right has a security bug.
+And the fact is, the code on the right has a security bug.
 The code on the left does not.
 
-Did anyone notice, while I was refactoring, the point at
-which I fixed the bug?
-
-Don't feel bad if you didn't. The first time I did this
-refactoring, I didn't see it. I fixed the bug by accident.
-Didn't even realize there **had** been a bug until I was
-done.
+Does anyone see it?
 
 So here's the problem: If the USER environment
 variable has a malicious script in it, it will be passed
@@ -911,8 +971,16 @@ I don't know if there are any general lessons to be learned
 here. However I do think it's interesting that a) this
 very simple code contains a security hole even though I was
 thinking about shell escaping when I wrote it, and b) I
-fixed the bug by accident while doing a principled
+fixed the bug by accident just by doing a principled
 refactoring.
+
+---
+
+class: center, middle
+
+## Questions?
+
+???
 
 With that, I'll take questions.
 
@@ -947,6 +1015,20 @@ Try it yourself!
 .smaller-font[
 https://benchristel.github.io/assets/principled-refactoring-demo.html
 ]
+
+???
+
+And finally, I'm sure you're already thinking of refactoring
+principles that are better than mine. I've put up the
+starting code and the tests in a live editor at that link,
+so please do try out different refactorings and let me know
+what you discover!
+
+---
+
+class: center, middle
+
+Thanks for listening!
 
     </textarea>
     <script src="../lib/remark.js" type="text/javascript">
