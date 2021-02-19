@@ -183,7 +183,7 @@ Martin Fowler published the seminal book on Refactoring in
 1999, but he says the technique is older than that. He just
 documented it.
 
-But the strength of Fowler's book, in my opinion, is that
+But the thing I like about Fowler's book is that
 he gives us a vocabulary for talking about refactoring.
 
 ---
@@ -277,9 +277,9 @@ easy to change, and we may know procedurally how to
 refactor, but that doesn't tell us which refactorings to
 apply at any given moment as we're working.
 
-Refactoring often feels like a maze of paths with no clear
-exit. It's hard to know which way to go, and even hard to
-know when we've reached the goal.
+So to me, refactoring often feels like a maze of paths with
+no clear exit. It's hard to know which way to go, and hard
+to even know when we've reached the goal.
 
 ---
 
@@ -376,10 +376,10 @@ So let's see how DRY works with a code example.
 
 Here's the code that's the protagonist of today's talk.
 What it does is it constructs some command line arguments
-that are going to be passed to a compiler.
+that are going to be passed to a compiler via the shell.
 
 If we're using the DRY principle, the first thing we're
-likely to notice about this code is these two obviously
+likely to notice about this code is these two big
 duplicated chunks.
 
 ---
@@ -441,8 +441,10 @@ So we pull those out into a function.
 
 ???
 
-Then we can do a replace loop with pipeline on that function
-and we get this.
+Then we might say, "you know, this loop with the index
+variable is pretty funky, that's not really idiomatic
+javascript", so we can actually replace it with a map
+and a join.
 
 Then we notice that this line is pretty similar to this
 line, so we pull out a function for that.
@@ -484,7 +486,8 @@ the original code, but I think we've gone up kind of a dead
 end here. We've reached a local optimum from which it's
 hard to see our way to a better design.
 
-And this is the core of the problem with DRY as a principle.
+And this is the core of the problem with DRY if it's our
+only guiding principle.
 DRY leads to
 greedy optimizations that remove **obvious** duplication locally
 while leaving quite a bit of **hidden** duplication globally.
@@ -555,15 +558,16 @@ buildSingleArgString("-L", cfg.libdir)
 
 ???
 
-Here's an example: this code, from the DRY refactoring we
-just saw, has two functions. buildArgString actually calls
+Here's an example of some indirect code from the DRY
+refactoring we just saw. buildArgString actually calls
 buildSingleArgString under the hood, so these two functions
 are doing fundamentally the same kind of thing. But that
 relationship is invisible to someone who's just looking at
-these two lines. They might guess that these functions are
-related, but they won't know for sure unless they look at
-the implementation. The principle of directness says that
-if we can save our readers that uncertainty, we should.
+these two lines. They might guess from the names that these
+functions are related, but they won't know for sure unless
+they look at the implementation. The principle of directness
+says that if we can save our readers that uncertainty, we
+should.
 
 ---
 
@@ -573,9 +577,7 @@ class: center, middle, black
 
 ???
 
-Principle 2 is symmetry.
-
-Symmetry is another property of code.
+Principle 2 is symmetry. Another property of code.
 
 Code that's symmetrical has a rhythm to it, a predictable
 repeating structure.
@@ -643,7 +645,7 @@ at a glance.
 
 class: middle
 
-## WET Symmetry
+### WET Symmetry
 
 ```ruby
 case uri.scheme
@@ -678,7 +680,7 @@ class: center, middle, black
 
 The third principle is Rootedness. Unlike the other
 principles, rootedness isn't a property of code. It's a
-property of change.
+property of the way we change code.
 
 When I say "rooted" I want you to think of "grassroots".
 Rooted changes emerge organically from what's already there.
@@ -730,10 +732,13 @@ other principles.
 
 The thing I like about algorithms for rooted change
 is that you can pick them up pretty quickly and they don't
-require a lot of creative insight to use. You can pretty
-much just use them and see where they take you. Often I find
+require a lot of creative insight or magical design
+intuition to use. You can pretty much just follow the
+instructions and see where they take you. Often I find
 they show me solutions I never would have found just by
-designing at a whiteboard.
+designing at a whiteboard. So these algorithms actually
+work better than creative insight a lot of the time, at
+least at my level of expertise.
 
 ---
 
