@@ -72,6 +72,10 @@
         padding-right: 3em;
       }
 
+      cite em {
+        text-decoration: underline;
+      }
+
       cite:before {
         display: inline;
         content: '—';
@@ -189,22 +193,27 @@ something that's not worth discussing or thinking very
 much about. We take it for granted that we can all look
 at a chunk of code and eventually figure out what it does.
 
----
+However, I think that we should not take it for granted. I
+hope to convince you that reading code is a skill that we
+should deliberately practice like any other skill. And like
+any other skill in programming, a lot of that practice centers
+on learning to use the best tool available for each job.
+
+<!--
 
 class: middle
 
 <img src="lecture.jpg" alt="a lecture hall full of students"/>
 
-???
-
-Certainly this was my attitude for a long time. I think it
-was engrained into me by the way computer science was taught
-when I was in college. I don't know if it's different now,
+The idea that reading code sort of goes without saying
+seems to come from the way computer science
+and programming are taught. I don't know if it's different
+in colleges now,
 but when I learned CS, there was a lot of focus on
-algorithms and design and programming languages, and almost
+algorithms and design and programming languages, but almost
 no focus on the procedural aspects of how to program—how to
-use a text editor or an IDE effectively, for example. And
-the result of that was that when I got out of college and
+use a text editor or an IDE effectively. And the result of
+that—just to give one example—was that when I got out of college and
 got my first programming job, the way I opened files in my
 text editor was that I would hit command-O, which brought up
 the operating system dialog for choosing a file, I would
@@ -219,14 +228,10 @@ hobbyist for about 14 years at that point, and it had never
 occurred to me to learn how to open a file—simply because I
 didn't know what I was missing.
 
----
-
 class: middle
 
 1. Using an editor is a _skill_.
 2. Great programmers have _procedural_ as well as conceptual knowledge.
-
-???
 
 And so I actually learned two things from that experience.
 First, that using an editor
@@ -239,12 +244,14 @@ they're using, and streamlining all those little interactions
 lets them focus their mental energy where it really matters—on
 the hard task of solving problems with code.
 
-But this talk, of course, is not about opening files. There
-are thousands of micro-skills we use
-in our jobs that I'm not going to talk about. We're just going
-to focus on reading code. And there are
+This is all sort of a digression because this talk is not
+about opening files, or about any of the other thousands
+of micro-skills and techniques we use on a day to day basis.
+I just want to focus on techniques for reading code. And there are
 a couple reasons I want to focus on reading to the exclusion
 of other activities.
+
+-->
 
 ---
 
@@ -254,14 +261,14 @@ class: middle
 > over 10 to 1. We are constantly reading old code as part
 > of the effort to write new code.
 
-<cite>Bob Martin</cite>
+<cite>Bob Martin, _Clean Code_</cite>
 
 ???
 
 The first reason is that reading code is, empirically, what most
 programmers spend most of their time doing.
 
-In his book _Clean Code_, Bob Martin writes, &lt;read quote&gt;
+In his book _Clean Code_, Bob Martin writes, (read quote);
 
 So if we use the best tools we can for _reading_ code, we'll get
 better and faster at programming. In comparison, there are relatively
@@ -274,14 +281,14 @@ to _write_ code.
 
 ???
 
-The second reason I want to focus on reading is that it
-seems to me that the tools we
-have for _understanding_ code are less used and less
-appreciated than the tools for writing code. And that's
-just because, if you're doing some editing task that
-requires a lot of
-repeated typing or error-prone manual changes, you'll
-probably look for a tool to help you do it faster and more
+The second reason I want to focus on reading is that I think
+tools for reading code are underrated. There are tons of
+blog posts about cool tools and tricks for writing code,
+but not a lot about reading code. I think one of the causes
+of that is that editing tasks are a lot more visible and
+tangible than reading tasks. If you're doing some repetitive
+manual thing over and over when writing code, you'll
+notice that and look for a tool to help you do it faster and more
 reliably. But when we're reading code, on the other hand,
 it's often much harder
 to identify exactly where we are spending our effort or to imagine
