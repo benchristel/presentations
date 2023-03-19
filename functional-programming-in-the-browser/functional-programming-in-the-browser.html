@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ben Christel - Refactoring Javascript</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+      .remark-code {
+        font-size: 24px;
+        line-height: 125%;
+      }
+
+      .hljs-default .hljs {
+        overflow: hidden;
+      }
+
+      .full-image {
+        background-size:contain;
+        background-position:center;
+        background-repeat:no-repeat;
+        width:100%;
+        height:100%;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# What's the coolest thing about HTML?
+
+???
+
+Ok, quick poll of the audience: what's the coolest thing about HTML? If anything?
+
+---
+
+TODO: image of html source and corresponding webpage
+
+???
+
+Well, in my opinion, the coolest thing about HTML is that it turns static data (XML documents) into user interfaces. The static data part isn't really exceptional, because you could say that any program with a UI is turning its static binary executable or source code into a UI, but the great thing about HTML is that it's human-readable. The stuff in the static data corresponds directly to what's on the screen, and that's what makes HTML so powerful.
+
+---
+
+???
+
+~~This is why I love old websites. They are, by and large, a straightforward translation of their source code. When I look at a webpage that's been up since 1999, I know exactly what I'm going to find when I click "View Source". It's going to be a lot of absolute positioning and inline styles and Dreamweaver cruft.~~
+
+---
+
+???
+
+But sometime around, oh, 1997, the web got complicated. In 1997, Netscape and Microsoft both released browsers in which JavaScript could dynamically and arbitrarily manipulate the HTML. The following year saw the first standards proposal for the Document-Object Model—the DOM. And after that, what was in the HTML source didn't necessarily correspond to what was on the screen. You couldn't just view the raw source code and make sense of it, necessarily. The UI was no longer a simple, immutable value: it was a dynamic, structured, mutable, global object that any JavaScript running anywhere could manipulate.
+
+---
+
+???
+
+This innovation enabled a whole new generation of web applications. We called it Web 2.0. But I think the direction it took was really unfortunate , because it caused a whole bunch of problems. Security issues, for example. If a malicious script gets control of the DOM, phishing becomes really easy. But it also contributed to what I see as the dark age of JavaScript. Because the DOM was a both a global, mutable object, and people wrote JavaScript that was deeply entangled with it. You've probably heard that mutable global state is bad. Well, the DOM taught a generation of web programmers that mutable global state was *the* way that stuff gets done, and this led to sprawling, unmanageable spaghetti code and ultimately to blanket accusations that JavaScript was a terrible language.
+
+In 2006, jQuery came along and enabled developers to mutilate the dom more easily and effectively than ever before.
+
+But JavaScript is not the problem. The way that JS interacts with the DOM is the problem.
+
+---
+
+???
+
+In 2010, both Backbone and Angular saw their first release
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
