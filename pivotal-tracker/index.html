@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ben Christel - Pivotal Tracker</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Automatic Project Management
+
+Ben Christel, 2023
+
+.deemphasized[This presentation was made with [Remark](https://github.com/gnab/remark).<br>To see the speaker notes, press `P`.]
+
+???
+
+These are the speaker notes!
+
+---
+
+class: center, middle
+
+# Automatic Project Management
+
+with
+
+![Pivotal Tracker logo](tracker-logo-512.png)
+
+Ben Christel,&nbsp;&nbsp;2023
+
+Khan Academy
+
+---
+
+# Outline
+
+- Why I'm giving this talk
+--
+
+- What is Pivotal Tracker?
+--
+
+- Why is Pivotal Tracker?
+--
+
+- The Elements of Tracker
+  - An ordered backlog of user stories
+
+--
+
+- How does work get into the backlog?
+
+--
+
+- How does work get out of the backlog?
+
+--
+
+- Problems with Tracker
+
+---
+
+# Why This Talk?
+
+--
+
+- Not a sales pitch
+- I don't think we should use Tracker
+
+--
+
+- This talk isn't really about Tracker, the software product
+
+--
+
+- It's about the culture that the software embodies, and the process it enables
+
+--
+
+- I don't even think we should use the whole Tracker _process_.
+
+--
+
+- I _do_ think the process is worth studying and learning from.
+
+???
+
+---
+
+class: center, middle
+
+# What is Tracker?
+
+---
+
+background-image: url(automatic-planning.png)
+background-size: contain
+background-repeat: no-repeat
+
+???
+
+Automatic planning keeps your team in a rhythm. Get predictable and stay that way: Say goodbye to managing timelines and meeting unrealistic expectations, and let velocity do the planning.
+
+???
+
+A tool for communicating between engineering and "the business"
+
+---
+
+.breadcrumb[What is Tracker?]
+
+# Tracker is like Jira
+
+- Features and Bugs
+
+--
+
+- Epics and labels
+
+--
+
+- Story points
+
+--
+
+- Velocity
+
+---
+
+.breadcrumb[What is Tracker?]
+
+# ...but Tracker is *not* Jira
+
+--
+
+- One view of the project. Everyone on the team sees the same thing when they look at Tracker.
+
+--
+
+- No sprint commitments. One continuous flow of value.
+
+--
+
+- Work items have no &ldquo;Priority&rdquo; field\*
+
+--
+
+- Work items can have up to 3 owners. This enables pair programming.
+
+--
+
+- A team has one backlog and one product owner.
+
+---
+
+class: center, middle
+
+# Why is Tracker?
+
+---
+
+.breadcrumb[Why is Tracker?]
+
+# Pivotal Labs
+
+- Software consulting company, 1989–2020
+- &ldquo;Come work with us, in our office, on your project, and we'll teach you how to build software effectively.&rdquo;
+- Tracker is the artifact that, more than any other, encodes the Pivotal Labs way of working in its structure.
+
+???
+
+re: "build software effectively", that means:
+- pair programming
+- shared code ownership
+
+---
+
+background-image: url('labs1.jpg')
+
+???
+
+cross-functional collaboration
+
+---
+
+background-image: url('labs2.jpg')
+
+???
+
+agile project planning - fixed budget or fixed scope, but not both
+
+---
+
+background-image: url('labs3.jpg')
+
+???
+
+pair programming
+
+---
+
+background-image: url('labs4.jpg')
+
+???
+
+---
+
+.breadcrumb[Why is Tracker?]
+
+# *The* tool for project-related communication
+
+- No Confluence
+
+- No ADRs
+
+- No email!
+
+- No pull requests!
+
+---
+
+.breadcrumb[Why is Tracker?]
+
+# Who is involved?
+
+![venn diagram with 3 circles showing the overlapping concerns of PM, design, and engineering](pm-design-eng.png)
+
+???
+
+- Product: has authority to answer the question "what's valuable?"
+- Design: has authority to answer the question "what's usable?"
+- Engineering: has authority to answer the question "what's feasible?"
+
+---
+
+.breadcrumb[Why is Tracker?]
+
+# What does Tracker make easier?
+
+- building the right thing
+- seeing progress
+- planning efficiently
+- forecasting when a feature will be ready
+- exploring hypotheticals
+- communicating
+- answering questions about project history
+- fun, joy, enthusiasm
+
+???
+
+building the right thing
+
+gives business visibility into progress without sacrificing team autonomy
+
+efficient planning that actually works (details later)
+
+forecasts answers to the question "when will feature X be ready to release" so you can answer such 
+questions immediately on demand
+
+lets you easily explore hypotheticals ("what if we added two engineers to the team?" "what if we deprioritized this feature?") and see the effects on the release date
+
+Tracker can be the source of truth for all project-related communication
+    we didn't use slack or email
+
+answering questions about project history like "why did we do it this way"
+
+fun, joy, enthusiasm
+
+---
+
+class: center, middle
+
+# The Elements of Tracker
+
+---
+
+.breadcrumb[The Elements of Tracker]
+
+### The Backlog
+
+![tracker project](tracker-project-1.webp)
+
+---
+
+.breadcrumb[The Elements of Tracker   >   The Backlog]
+
+### One Queue, Many Cash Registers
+
+![REI checkout](rei.webp)
+
+---
+
+.breadcrumb[The Elements of Tracker   >   The Backlog]
+
+### One Backlog, Many Workstations
+
+![Pivotal Labs](labs4.jpg)
+
+---
+
+.breadcrumb[The Elements of Tracker   >   The Backlog]
+
+# Advantages of the one&#8209;backlog model
+
+- The top-priority thing is always being worked on
+- No time is spent assigning work to people
+- Everyone has something to do
+- You get to work on a variety of things
+
+---
+
+.breadcrumb[The Elements of Tracker   >   The Backlog]
+
+# Risks of the one&#8209;backlog model
+
+- What if I don't know how to do the highest-priority thing?
+- What if it's not my area of the codebase?
+- What if I don't know what the requirements are?
+
+---
+
+.breadcrumb[The Elements of Tracker]
+
+# User Stories
+
+- A way of phrasing feature requirements so everyone on the team can understand them
+- The smallest useful increment of functionality
+- Something a user could test and give us feedback on
+- &ldquo;Minimum viable feature&rdquo;
+
+---
+
+.breadcrumb[The Elements of Tracker   >   User Stories]
+
+## Parts of a (User) Story
+
+--
+
+- The motivation: a goal, problem, or conflict.
+
+--
+
+- The protagonist: a role or persona.
+
+--
+
+- The plot: what specifically does the user do?
+  - A.K.A. Acceptance Criteria
+
+--
+
+- Illustrations: design mockups.
+
+---
+
+class: center, middle
+
+# Motivation
+
+---
+
+.breadcrumb[The Elements of Tracker   >   User Stories   >   Motivation]
+
+## &ldquo;As an X, I want to Y, so that Z&rdquo;
+
+_As a product manager, I want to click and drag stories to reprioritize them, so I can effortlessly communicate priorities to my team._<br><br>
+
+_As a developer, I want to click &ldquo;start&rdquo; on a user story and have it update for everyone, so that no one else also starts working on it._<br><br>
+
+.deemphasized[This pattern is named the [Connextra Template](https://www.agilealliance.org/glossary/user-story-template/), after the first company to use it.]
+
+---
+
+.breadcrumb[The Elements of Tracker   >   User Stories   >   Motivation]
+
+# Bad User Stories
+
+![](shituserstory1.jpeg)
+
+---
+
+.breadcrumb[The Elements of Tracker   >   User Stories   >   Motivation]
+
+# Bad User Stories
+
+![](shituserstory2.jpeg)
+
+---
+
+class: center, middle
+
+# Protagonist
+
+---
+
+.breadcrumb[The Elements of Tracker   >   User Stories   >   Protagonist]
+
+# Roles
+
+- The capacity in which someone is using your product.
+- Different roles have different goals.
+- Examples:
+  - Teacher
+  - Parent
+  - Learner
+  - Donor
+  - District Admin
+  - Discussion Moderator
+  - Content Author
+  - Application Engineer
+  - Site Reliability Engineer
+
+---
+
+
+.breadcrumb[The Elements of Tracker   >   User Stories   >   Protagonist]
+
+# Roles for Pivotal Tracker
+
+- Product Manager
+- Designer
+- Engineer
+- Client Product Owner
+- Client Liaison
+- Pivotal Labs Office Director
+
+---
+
+.breadcrumb[The Elements of Tracker   >   User Stories   >   Protagonist]
+
+# Personas
+
+- A brief profile of a fictional person
+- More specific than a role (like "teacher", "learner", "district admin")
+- Not a real person
+- Synthesized from multiple interviews with real people
+- Not tailor-made to fit your preconceived product idea!
+
+---
+
+.breadcrumb[The Elements of Tracker   >   User Stories   >   Protagonist]
+
+# Persona Example 1
+
+## Joaquín
+
+- 5th grader
+- Uses a Chromebook in class
+- No wifi at home, so studies on his smartphone with a data plan
+- Lives with his parents, younger brother, grandmother, and two dogs
+- Fluent in English and Spanish
+- Favorite subjects are math and history
+
+---
+
+.breadcrumb[The Elements of Tracker   >   User Stories   >   Protagonist]
+
+# Persona Example 2
+
+## Alyssa
+
+- 10th grader
+- Studying independently for AP Chemistry exam, even though her school doesn't offer the class
+- Spends a lot of time on Discord, Tiktok, and Instagram
+- Dreams of developing life-saving cancer treatments
+- Uses Chrome on a MacBook, and Safari on iOS.
+- Favorite subjects: science and communications
+
+---
+
+class: center, middle
+
+***Effective personas are synthesized from multiple user interviews.***
+
+***Personas do not replace user testing!***
+
+???
+
+To conclude: to get good personas, you need to be doing market research and interviews.
+You can't just make them up based on what you want your product to be like.
+
+Personas don't replace user testing. Just because you're designing with a particular persona in mind doesn't mean your
+product will be great for those users, automatically. You still have to try it out
+with real people and listen to their feedback.
+
+---
+
+class: center, middle
+
+# Plot
+
+---
+
+.breadcrumb[The Elements of Tracker   >   User Stories   >   Plot]
+
+# Acceptance Criteria
+
+- A test plan that we write before the work starts
+- Ensures that the feature can actually be tested! I.e. it actually has some reliable, perceptible effect from some user's perspective.
+- &ldquo;Acceptance&rdquo; means the PM or QE running through the test plan and signing off on the work.
+
+---
+
+.breadcrumb[The Elements of Tracker   >   User Stories   >   Plot]
+
+# Gherkin
+
+- A semi-structured language for writing acceptance criteria
+- GIVEN, WHEN, THEN
+
+```gherkin
+Given I am logged in as an admin
+When I visit "/devadmin"
+Then I see a link titled "Content Editor"
+
+When I click "Content Editor"
+Then I am taken to "/devadmin/content"
+And I see a list of courses
+```
+
+---
+
+.breadcrumb[The Elements of Tracker   >   User Stories   >   Plot]
+
+# Gherkin
+
+- GIVEN = preconditions. "Arrange"
+- WHEN = action. "Act"
+- THEN = how you know it worked. "Assert"
+
+---
+
+class: center, middle
+
+***Communicating requirements is more important than syntax!***
+
+???
+
+Gherkin was invented as a semi-structured language for writing user acceptance tests.
+
+The idea of a user acceptance test is that a non-technical person (the user or customer) writes them
+in Gherkin, and then developers work behind the scenes to translate the Gherkin statements into
+executable code using templates. There are tools for doing this, e.g. the Cucumber testing framework.
+
+The problem with acceptance tests is that customers and users don't seem to care about them in
+practice.
+
+---
+
+class: center, middle
+
+# Putting it all together
+
+---
+
+.breadcrumb[The Elements of Tracker   >   User Stories]
+
+# User story example
+
+> Feature: User story workflow button
+>
+> As a developer using Pivotal Tracker, I want to let my team know what story I'm working on,
+> so that no one else also works on it.
+> 
+> **Given** I am logged into Tracker<br>
+> And my project has a user story that is not yet started<br>
+> **When** I click the "start" button on the story<br>
+> **Then** the button turns blue<br>
+> And the text changes to "deliver"<br>
+> And the background of the story card changes to yellow, meaning "in progress"
+>
+> **When** I log in as a different team member<br>
+> **Then** I still see that the story is in progress
+
+---
+
+.breadcrumb[The Elements of Tracker   >   User Stories]
+
+# User story example, cont'd
+
+A design mockup is worth a thousand words.
+
+![design mockup for this feature, showing the start and finish buttons](tracker-story-mock.png)
+
+---
+
+.breadcrumb[The Elements of Tracker   >   User Stories]
+
+# Advantages of writing stories this way
+
+- each piece of work creates demonstrable value for an identifiable segment of your audience (the persona)
+- the scope of the work is clearer to everyone involved
+
+---
+
+.breadcrumb[The Elements of Tracker   >   User Stories]
+
+# Risks of writing stories this way
+
+- using the template without fulfilling its purpose
+- waste of effort when the team already knows what to do
+- the "fog of formality" from the structured format can make the story _harder_ to understand
+
+---
+
+.breadcrumb[The Elements of Tracker   >   User Stories]
+
+# Break the rules
+
+_A user story is a **placeholder for a conversation**._
+
+> We have come to value individuals and interactions over processes and tools.
+>
+> —The Manifesto for Agile Software Development
+
+---
+
+class: center, middle
+
+***Story-writing is a process, not a single step***
+
+---
+
+class: center, middle
+
+## What about work that isn't a user story?
+
+Don't worry, Tracker has an answer for that too.
+
+---
+
+class: center, middle
+
+# How work gets into the backlog
+
+---
+
+.breadcrumb[How work gets into the backlog]
+
+# It's a whole process
+
+- user research / market research
+--
+
+- personas
+--
+
+- product vision (loosely held)
+--
+
+- user stories
+--
+
+- UX design
+--
+
+- UI design
+--
+
+- acceptance criteria
+--
+
+- estimation
+--
+
+- prioritization
+
+???
+
+At the beginning of this process, product is more involved. In the middle, design is more involved.
+Throughout the process, engineers give feedback about cost/value tradeoffs
+(most formally in the estimation step, but ideally at all points from product vision onward)
+
+---
+
+.breadcrumb[How work gets into the backlog]
+
+# It's a whole process
+
+- user research / market research
+- ~~personas~~
+- product vision (loosely held)
+- ~~user stories~~
+- UX design
+- UI design
+- ~~acceptance criteria~~
+- estimation
+- prioritization
+
+???
+
+We've already discussed personas, user stories and acceptance criteria
+
+---
+
+.breadcrumb[How work gets into the backlog]
+
+# It's a whole process
+
+- ~~user research / market research~~
+- ~~personas~~
+- ~~product vision (loosely held)~~
+- ~~user stories~~
+- ~~UX design~~
+- ~~UI design~~
+- ~~acceptance criteria~~
+- estimation
+- prioritization
+
+???
+
+and these other things are beyond the scope of this talk.
+So let's talk about estimation.
+
+---
+
+.breadcrumb[How work gets into the backlog]
+
+# Estimation
+
+- Tracker measures the relative "size" of work items in **story&nbsp;points**.
+
+--
+
+- Story points combine estimates of risk, complexity, and effort, all of which correlate with time.
+
+--
+
+- While we're bad at estimating how long something will take, estimating _relative size_ is easier.
+
+--
+
+- A team, working sustainably over time, will deliver a fairly consistent number of story points every week. The average story points per week is the team's _velocity_.
+
+---
+
+.breadcrumb[How work gets into the backlog]
+
+# Estimation
+
+- To avoid quibbling over story points and decouple estimates mentally from time, Tracker forces estimates to be approximate by "bucketizing" them into a small set of values.
+
+![small, medium, and large buckets](sml-400.jpg)
+
+---
+
+.breadcrumb[How work gets into the backlog]
+
+# Estimation
+
+Several point scales are in use:
+
+- linear: 0, 1, 2, 3
+
+--
+- fibonacci: 0, 1, 2, 3, 5, 8
+
+--
+- exponential: 0, 1, 2, 4, 8
+
+--
+- sparse fibonacci: 0, 1, 3, 8
+
+--
+- custom: 1, 5, 25, 125
+
+--
+
+The only thing you can't do in Tracker is make the "estimate" field a free-entry number input.
+
+---
+
+.breadcrumb[How work gets into the backlog]
+
+# Why estimate?
+
+- Predict how long a whole project will take
+- Predict when a given feature will be ready
+- Have a conversation about what's involved in implementation
+
+---
+
+# \#NoEstimates
+
+A team has a velocity - an average number of story points they deliver per week.
+
+A team also has an average story size
+
+Divide velocity by story size, and you get stories per week
+
+If velocity is stable, and average story size is stable, then counting stories should give you the same forecasts as estimating with story points!
+
+And indeed it does.
+
+Stories per week averages out over time and can be used for long-term forecasting
+
+...but not for short-term forecasting.
+
+---
+
+# Volatility
+
+- A measure of how much a team's velocity varies from week to week
+
+- You want volatility to be low so you can make accurate short-term forecasts.
+
+- volatility = stddev(velocity) / average(velocity) * 100%
+
+    </textarea>
+    <script src="../lib/remark.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
