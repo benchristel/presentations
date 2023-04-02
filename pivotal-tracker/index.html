@@ -39,27 +39,24 @@ Khan Academy
 # Outline
 
 - Why I'm giving this talk
---
 
-- What is Pivotal Tracker?
 --
-
-- Why is Pivotal Tracker?
---
-
 - The Elements of Tracker
-  - An ordered backlog of user stories
+  - Live demo
 
 --
-
-- How does work get into the backlog?
-
---
-
-- How does work get out of the backlog?
+- What is Tracker for?
 
 --
+- The Tracker Process
 
+--
+- User Stories
+
+--
+- Estimation
+
+--
 - Problems with Tracker
 
 ---
@@ -67,208 +64,23 @@ Khan Academy
 # Why This Talk?
 
 --
+- We're in a transitional period
 
-- Not a sales pitch
+--
+- This isn't a sales pitch
 - I don't think we should use Tracker
 
 --
-
 - This talk isn't really about Tracker, the software product
 
 --
-
-- It's about the culture that the software embodies, and the process it enables
+- It's about a way of approaching project management that's worked really well for me.
 
 --
-
 - I don't even think we should use the whole Tracker _process_.
 
 --
-
 - I _do_ think the process is worth studying and learning from.
-
-???
-
----
-
-class: center, middle
-
-# What is Tracker?
-
----
-
-background-image: url(automatic-planning.png)
-background-size: contain
-background-repeat: no-repeat
-
-???
-
-Automatic planning keeps your team in a rhythm. Get predictable and stay that way: Say goodbye to managing timelines and meeting unrealistic expectations, and let velocity do the planning.
-
-???
-
-A tool for communicating between engineering and "the business"
-
----
-
-.breadcrumb[What is Tracker?]
-
-# Tracker is like Jira
-
-- Features and Bugs
-
---
-
-- Epics and labels
-
---
-
-- Story points
-
---
-
-- Velocity
-
----
-
-.breadcrumb[What is Tracker?]
-
-# ...but Tracker is *not* Jira
-
---
-
-- One view of the project. Everyone on the team sees the same thing when they look at Tracker.
-
---
-
-- No sprint commitments. One continuous flow of value.
-
---
-
-- Work items have no &ldquo;Priority&rdquo; field\*
-
---
-
-- Work items can have up to 3 owners. This enables pair programming.
-
---
-
-- A team has one backlog and one product owner.
-
----
-
-class: center, middle
-
-# Why is Tracker?
-
----
-
-.breadcrumb[Why is Tracker?]
-
-# Pivotal Labs
-
-- Software consulting company, 1989–2020
-- &ldquo;Come work with us, in our office, on your project, and we'll teach you how to build software effectively.&rdquo;
-- Tracker is the artifact that, more than any other, encodes the Pivotal Labs way of working in its structure.
-
-???
-
-re: "build software effectively", that means:
-- pair programming
-- shared code ownership
-
----
-
-background-image: url('labs1.jpg')
-
-???
-
-cross-functional collaboration
-
----
-
-background-image: url('labs2.jpg')
-
-???
-
-agile project planning - fixed budget or fixed scope, but not both
-
----
-
-background-image: url('labs3.jpg')
-
-???
-
-pair programming
-
----
-
-background-image: url('labs4.jpg')
-
-???
-
----
-
-.breadcrumb[Why is Tracker?]
-
-# *The* tool for project-related communication
-
-- No Confluence
-
-- No ADRs
-
-- No email!
-
-- No pull requests!
-
----
-
-.breadcrumb[Why is Tracker?]
-
-# Who is involved?
-
-![venn diagram with 3 circles showing the overlapping concerns of PM, design, and engineering](pm-design-eng.png)
-
-???
-
-- Product: has authority to answer the question "what's valuable?"
-- Design: has authority to answer the question "what's usable?"
-- Engineering: has authority to answer the question "what's feasible?"
-
----
-
-.breadcrumb[Why is Tracker?]
-
-# What does Tracker make easier?
-
-- building the right thing
-- seeing progress
-- planning efficiently
-- forecasting when a feature will be ready
-- exploring hypotheticals
-- communicating
-- answering questions about project history
-- fun, joy, enthusiasm
-
-???
-
-building the right thing
-
-gives business visibility into progress without sacrificing team autonomy
-
-efficient planning that actually works (details later)
-
-forecasts answers to the question "when will feature X be ready to release" so you can answer such 
-questions immediately on demand
-
-lets you easily explore hypotheticals ("what if we added two engineers to the team?" "what if we deprioritized this feature?") and see the effects on the release date
-
-Tracker can be the source of truth for all project-related communication
-    we didn't use slack or email
-
-answering questions about project history like "why did we do it this way"
-
-fun, joy, enthusiasm
 
 ---
 
@@ -280,13 +92,122 @@ class: center, middle
 
 .breadcrumb[The Elements of Tracker]
 
-### The Backlog
+# Tracker is like Jira
 
-![tracker project](tracker-project-1.webp)
+--
+- Features and Bugs
+
+--
+- Epics and labels
+
+--
+- Story points
+
+--
+- Velocity
 
 ---
 
-.breadcrumb[The Elements of Tracker   >   The Backlog]
+.breadcrumb[The Elements of Tracker]
+
+# ...but Tracker is *not* Jira
+
+--
+- One view of the project. Everyone on the team sees the same thing when they look at Tracker.
+
+--
+- live-updating UI, collaborative UX
+
+--
+- No sprint commitments. One continuous flow of value.
+
+--
+- Work items have no &ldquo;Priority&rdquo; field\*
+
+--
+- Work items can have up to 3 owners. This enables pair programming.
+
+--
+- Completed work items can easily be browsed later and form the internal
+  documentation for the project
+
+---
+
+class: center, middle
+
+# (Live Demo)
+
+???
+
+Live demo: https://www.pivotaltracker.com/n/projects/2548896
+
+- Backlog of prioritized work, icebox of unprioritized work
+- Highest-priority at the top
+- Velocity is the average number of story points the team gets done per week
+- Gray markers are week boundaries—automatically placed based on velocity
+- You can easily see what's probably going to get done each week
+- star = feature, gear = "chore", bug = bug
+- as work gets done, it moves from "unstarted" state to "started", "finished", "delivered",
+  and "accepted".
+
+---
+
+class: center, middle
+
+# What is Tracker For?
+
+---
+
+background-image: url(automatic-planning.png)
+background-size: contain
+background-repeat: no-repeat
+
+???
+
+Automatic planning keeps your team in a rhythm. Get predictable and stay that way: Say goodbye to managing timelines and meeting unrealistic expectations, and let velocity do the planning.
+
+---
+
+.breadcrumb[What is Tracker For?]
+
+Tracker made it easy  for us to answer questions about the health of a project, with data.
+
+--
+- When will feature X be done?
+
+--
+- How much work can we realistically get done this week?
+
+--
+- Where are the bottlenecks?
+
+--
+- Is the team getting more or less effective over time?
+
+--
+- Who worked on what?
+
+--
+- How many people would we have to add to the team to make our planned release date?\*
+
+--
+- Why did we make the technical decisions we did?
+
+---
+
+class: center, middle
+
+### Tracker also enabled a particularly effective work process.
+
+---
+
+class: center, middle
+
+# The Tracker Process
+
+---
+
+.breadcrumb[The Tracker Process]
 
 ### One Queue, Many Cash Registers
 
@@ -294,7 +215,7 @@ class: center, middle
 
 ---
 
-.breadcrumb[The Elements of Tracker   >   The Backlog]
+.breadcrumb[The Tracker Process]
 
 ### One Backlog, Many Workstations
 
@@ -302,7 +223,13 @@ class: center, middle
 
 ---
 
-.breadcrumb[The Elements of Tracker   >   The Backlog]
+class: center, middle
+
+#### When we finished a task, we'd pick up whatever was at the top of the backlog and work on that next.
+
+---
+
+.breadcrumb[The Tracker Process]
 
 # Advantages of the one&#8209;backlog model
 
@@ -314,7 +241,7 @@ class: center, middle
 
 ---
 
-.breadcrumb[The Elements of Tracker   >   The Backlog]
+.breadcrumb[The Tracker Process]
 
 # Risks of the one&#8209;backlog model
 
@@ -324,7 +251,49 @@ class: center, middle
 
 ---
 
-.breadcrumb[The Elements of Tracker]
+class: middle
+
+Pivotal addressed these risks by pair-programming full time.
+
+- We switched pairs daily to maximize knowledge-sharing.
+
+???
+
+When we switched pairs, one person would stick on the current task to keep
+context. Sometimes the person who'd been on the task longest would switch out,
+sometimes they'd stick.
+
+---
+
+.breadcrumb[The Tracker Process]
+
+# The lifecycle of a task
+
+--
+- Unstarted
+
+--
+- Started (a programmer's working on it)
+
+--
+- Finished (code written, tested, and integrated)
+
+--
+- Delivered (deployed to a staging environment)
+
+--
+- Accepted (PM / QE signed off)
+
+--
+  - ...or Rejected (needs more work)
+
+---
+
+class: center, middle
+
+# User Stories
+
+---
 
 # User Stories
 
@@ -348,7 +317,7 @@ class: center, middle
 
 ---
 
-.breadcrumb[The Elements of Tracker   >   User Stories]
+.breadcrumb[User Stories]
 
 ## Parts of a (User) Story
 
@@ -378,7 +347,7 @@ class: center, middle
 
 ---
 
-.breadcrumb[The Elements of Tracker   >   User Stories   >   Motivation]
+.breadcrumb[User Stories   >   Motivation]
 
 ## &ldquo;As an X, I want to Y, so that Z&rdquo;
 
@@ -394,7 +363,7 @@ _As a developer, I want to click &ldquo;start&rdquo; on a user story and have it
 
 ---
 
-.breadcrumb[The Elements of Tracker   >   User Stories   >   Motivation]
+.breadcrumb[User Stories   >   Motivation]
 
 # Bad User Stories
 
@@ -402,7 +371,7 @@ _As a developer, I want to click &ldquo;start&rdquo; on a user story and have it
 
 ---
 
-.breadcrumb[The Elements of Tracker   >   User Stories   >   Motivation]
+.breadcrumb[User Stories   >   Motivation]
 
 # Bad User Stories
 
@@ -416,7 +385,7 @@ class: center, middle
 
 ---
 
-.breadcrumb[The Elements of Tracker   >   User Stories   >   Protagonist]
+.breadcrumb[User Stories   >   Protagonist]
 
 # Roles
 
@@ -447,7 +416,7 @@ roles simultaneously.
 ---
 
 
-.breadcrumb[The Elements of Tracker   >   User Stories   >   Protagonist]
+.breadcrumb[User Stories   >   Protagonist]
 
 # Roles for Pivotal Tracker
 
@@ -467,7 +436,7 @@ class: center, middle
 
 ---
 
-.breadcrumb[The Elements of Tracker   >   User Stories   >   Plot]
+.breadcrumb[User Stories   >   Plot]
 
 # Acceptance Criteria
 
@@ -477,7 +446,7 @@ class: center, middle
 
 ---
 
-.breadcrumb[The Elements of Tracker   >   User Stories   >   Plot]
+.breadcrumb[User Stories   >   Plot]
 
 # Gherkin
 
@@ -496,7 +465,7 @@ And I see a list of courses
 
 ---
 
-.breadcrumb[The Elements of Tracker   >   User Stories   >   Plot]
+.breadcrumb[User Stories   >   Plot]
 
 # Gherkin
 
@@ -529,7 +498,7 @@ class: center, middle
 
 ---
 
-.breadcrumb[The Elements of Tracker   >   User Stories]
+.breadcrumb[User Stories]
 
 # User story example
 
@@ -550,7 +519,7 @@ class: center, middle
 
 ---
 
-.breadcrumb[The Elements of Tracker   >   User Stories]
+.breadcrumb[User Stories]
 
 # User story example, cont'd
 
@@ -560,7 +529,7 @@ A design mockup is worth a thousand words.
 
 ---
 
-.breadcrumb[The Elements of Tracker   >   User Stories]
+.breadcrumb[User Stories]
 
 # Advantages of writing stories this way
 
@@ -569,7 +538,7 @@ A design mockup is worth a thousand words.
 
 ---
 
-.breadcrumb[The Elements of Tracker   >   User Stories]
+.breadcrumb[User Stories]
 
 # Risks of writing stories this way
 
@@ -579,7 +548,7 @@ A design mockup is worth a thousand words.
 
 ---
 
-.breadcrumb[The Elements of Tracker   >   User Stories]
+.breadcrumb[User Stories]
 
 # Break the rules
 
@@ -597,100 +566,24 @@ class: center, middle
 
 ---
 
-class: center, middle
-
 ## What about work that isn't a user story?
 
-Don't worry, Tracker has an answer for that too.
+--
+- Bugs
+
+--
+  - Do not get estimated
+  - _Do_ go through the delivery/acceptance workflow, like features
+
+--
+- Chores
+
+--
+  - Internal developer tasks
+  - Do not get estimated
+  - Do _not_ go through delivery/acceptance (since they're not user-facing)
 
 ---
-
-class: center, middle
-
-# How work gets into the backlog
-
----
-
-.breadcrumb[How work gets into the backlog]
-
-# It's a whole process
-
-- talk to / observe people and find out what they need
---
-
-- product vision (loosely held)
---
-
-- user stories
---
-
-- UX design
---
-
-- UI design
---
-
-- acceptance criteria
---
-
-- estimation
---
-
-- prioritization
-
-???
-
-At the beginning of this process, product is more involved. In the middle, design is more involved.
-Throughout the process, engineers give feedback about cost/value tradeoffs
-(most formally in the estimation step, but ideally at all points from product vision onward)
-
-It's important to note that these are not waterfall-style phases. We don't do user research
-for the whole product and then design the whole product and write all the user stories
-and then start development. You want to be pushing small increments of value through this
-pipeline as fast as possible so you can get feedback faster.
-
----
-
-.breadcrumb[How work gets into the backlog]
-
-# It's a whole process
-
-- talk to / observe people and find out what they need
-- product vision (loosely held)
-- ~~user stories~~
-- UX design
-- UI design
-- ~~acceptance criteria~~
-- estimation
-- prioritization
-
-???
-
-We've already discussed user stories and acceptance criteria
-
----
-
-.breadcrumb[How work gets into the backlog]
-
-# It's a whole process
-
-- ~~talk to / observe people and find out what they need~~
-- ~~product vision (loosely held)~~
-- ~~user stories~~
-- ~~UX design~~
-- ~~UI design~~
-- ~~acceptance criteria~~
-- estimation
-- prioritization
-
-???
-
-and these other things are beyond the scope of this talk.
-So let's talk about estimation.
-
----
-
-.breadcrumb[How work gets into the backlog]
 
 # Estimation
 
@@ -710,17 +603,20 @@ So let's talk about estimation.
 
 ---
 
-.breadcrumb[How work gets into the backlog]
+.breadcrumb[Estimation]
 
 # Estimation
 
-- To avoid quibbling over story points and decouple estimates mentally from time, Tracker forces estimates to be approximate by "bucketizing" them into a small set of values.
-
 ![small, medium, and large buckets](sml-400.jpg)
+
+???
+
+To avoid quibbling over story points and decouple estimates mentally from time, Tracker forces estimates to be approximate by "bucketizing" them into a small set of values.
+
 
 ---
 
-.breadcrumb[How work gets into the backlog]
+.breadcrumb[Estimation]
 
 # Estimation
 
@@ -746,7 +642,7 @@ The only thing you can't do in Tracker is make the "estimate" field a free-entry
 
 ---
 
-.breadcrumb[How work gets into the backlog]
+.breadcrumb[Estimation]
 
 # Why estimate?
 
@@ -755,6 +651,8 @@ The only thing you can't do in Tracker is make the "estimate" field a free-entry
 - Have a conversation about what's involved in implementation
 
 ---
+
+.breadcrumb[Estimation]
 
 # \#NoEstimates
 
@@ -774,15 +672,65 @@ Stories per week averages out over time and can be used for long-term forecastin
 
 ---
 
-# Volatility
+.breadcrumb[Estimation]
 
-- A measure of how much a team's velocity varies from week to week
+# Bugs
 
-- You want volatility to be low so you can make accurate short-term forecasts.
+- Bug reports do not get estimated! Why?
 
-- volatility = stddev(velocity) / average(velocity) * 100%
+--
+- It doesn't make sense to count bugs towards velocity.
 
-    </textarea>
+--
+- Imagine we _did_ estimate bugs.
+
+--
+  - a particular team did 7 points of user stories this week, and 3 points of bugs.
+
+--
+  - There are 100 points of user stories before their next release.
+
+--
+  - When should we expect the release to be ready?
+
+--
+  - If we assume bug reports come in at a roughly constant rate, the team will only
+    be able to get 7 points of scheduled work done each week. So the release will ship
+    in 14 or 15 weeks, not 10.
+
+---
+
+.breadcrumb[Estimation]
+
+# Chores
+
+technical tasks
+
+- "renew the SSL certificate"
+- "set up GitHub Actions to run the tests for every commit"
+- "rewrite half a million lines of Python in Go"
+
+Chores are not estimated, for the same reason bugs are not—they're emergent work that
+"bubbles up" from the dev team, rather than being dictated by the business.
+
+---
+
+class: center, middle
+
+# Problems with Tracker
+
+---
+
+# Problems with Tracker
+
+- Engineer-centric. Designers get left out. There's no "in design" state for user stories.
+--
+
+- The one-backlog approach works best for co-located teams, working on small
+  codebases.
+
+
+</textarea>
     <script src="../lib/remark.js">
     </script>
     <script>
