@@ -31,7 +31,7 @@ h1, h2, h3 {
   font-weight: normal;
   word-spacing: 0.1em;
 }
-.remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+.remark-code, .remark-inline-code { font-family: 'Ubuntu Mono', 'Menlo', 'Monaco', monospace; }
 
 .remark-code {
   font-size: 24px;
