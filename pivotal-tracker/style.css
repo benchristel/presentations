@@ -1,5 +1,15 @@
+@font-face {
+  font-family: 'Local Merriweather Sans';
+  src: url("./MerriweatherSans-VariableFont_wght.ttf");
+}
+
+@font-face {
+  font-family: 'Local Cantarell Extra Bold';
+  src: url('./Cantarell-ExtraBold.otf');
+}
+
 body {
-  font-family: 'Merriweather Sans';
+  font-family: 'Local Merriweather Sans';
 }
 
 .remark-slide-content {
@@ -17,7 +27,7 @@ a, a:visited {
 }
 
 h1, h2, h3 {
-  font-family: 'Cantarell Extra Bold';
+  font-family: 'Local Cantarell Extra Bold';
   font-weight: normal;
   word-spacing: 0.1em;
 }
