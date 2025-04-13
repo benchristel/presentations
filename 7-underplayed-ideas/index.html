@@ -1,0 +1,23 @@
+1. Mental Modeling is the Hard Part of Software Development
+
+- the hard part of software development is building a useful mental model of the software, the problem it's solving, and its environment. A mental model is useful when enables you to predict and control the system's behavior as it evolves.
+- goal: intellectual control
+  - knowing what the system does, how, and why
+  - backing up that knowledge with demonstrations and proofs (e.g. types and tests)
+  - reasoning about the consequences of potential changes
+
+2. Testable Designs Have Benefits Beyond Testing
+
+- design for testing (and thus for grokking, repurposing, and extending)
+-
+- use mocks only as a last resort. message-based verification is usually not what you want.
+
+3. You don't have to suffer inconvenient data formats
+
+- rule out bad states early at runtime (parsing, type-driven design)
+
+
+- clearly distinguish effectful, stateful, and purely functional code
+- flatten hierarchies
+- separate general-purpose, domain-specific, and app/architecture-specific code.
+- algebraic properties
