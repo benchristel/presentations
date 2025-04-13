@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>What makes a bliki work</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .remark-slide-content {
+        background: #f4f4ff;
+        color: #123;
+      }
+
+      .remark-slide-content.dark {
+        /* background: #210; */
+        background: #000;
+        color: #fc9;
+      }
+
+      .big code {
+        font-size: 2rem;
+      }
+
+      h1, h2, h3 {
+        font-weight: normal;
+        color: #008;
+      }
+
+      .remark-code, .remark-inline-code {
+        font-family: 'Ubuntu Mono', monospace;
+        text-align: left;
+      }
+
+      blockquote {
+        font-style: italic;
+      }
+
+      blockquote p {
+        text-indent: -0.25em;
+      }
+
+      blockquote p:before {
+        display: inline;
+        content: '“';
+      }
+
+      blockquote p:after {
+        display: inline;
+        content: '”';
+      }
+
+      cite {
+        display: block;
+        text-align: right;
+        padding-right: 3em;
+      }
+
+      cite:before {
+        display: inline;
+        content: '—';
+      }
+
+      li {
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+      }
+
+      p {
+        margin-top: 1em;
+        margin-bottom: 1em;
+      }
+
+      .remark-slide-content p,
+      .remark-slide-content li {
+        font-size: 2rem;
+      }
+
+      img {
+        max-width: 100%;
+      }
+
+      .too-tall img {
+        height: 500px;
+      }
+
+      .small img {
+        max-height: 200px;
+      }
+
+      .float-left img {
+        float: left;
+        margin-right: 1em;
+      }
+
+      .smaller-font li,
+      .smaller-font p {
+        font-size: 1.5rem;
+      }
+
+      .stamp p {
+        display: block;
+        color: red;
+        text-shadow: 0 0 10px #fff;
+        font-weight: bold;
+        font-family: Impact, monospace;
+        transform-origin: center;
+        transform: rotate(-30deg) translate(2em, -2em);
+        font-size: 3em;
+      }
+
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# What Makes a Bliki Work
+
+---
+
+## Origin story
+
+In 2003, Martin Fowler coined the term "Bliki," in "[What Isa Bliki]."
+
+[What Isa Bliki]: https://martinfowler.com/bliki/WhatIsaBliki.html
+
+--
+> I decided I wanted something that was a cross between a wiki and a blog -
+> which Ward Cunningham immediately dubbed a bliki. Like a blog, it allows me
+> to post short thoughts when I have them. Like a wiki it will build up a body
+> of cross-linked pieces that I hope will still be interesting in a year's time.
+
+<cite>Martin Fowler</cite>
+
+---
+
+## Table of Contents
+
+--
+- What is a bliki? &amp; some history
+
+--
+- Why I like blikis / personal wikis / digital gardens
+
+--
+- Tools and tricks
+
+---
+
+## What is a bliki?
+
+> A **wiki** is a form of hypertext publication on the internet which is
+> collaboratively edited and managed by its audience directly through a web 
+> browser.
+
+<cite>[Wikipedia on Wiki]</cite>
+
+[Wikipedia on Wiki]: https://en.wikipedia.org/wiki/Wiki
+
+--
+
+A _bliki_, _personal wiki_, or _digital garden_ is a wiki with a single editor.
+
+---
+
+## What is a bliki?
+
+Unlike blog posts or personal webpages, the pages of a bliki:
+
+--
+- contain many links to other wiki pages
+
+--
+- are oriented around a single topic, rather than a lesson or narrative
+
+--
+- have no inherent ordering
+
+--
+- are often rough, and never completely finished
+
+---
+
+## Digital Garden = Bliki
+
+In 2015, Mike Caulfield wrote "[The Garden and the Stream: A Technopastoral],"
+contrasting two modes of interaction on the web.
+
+[The Garden and the Stream: A Technopastoral]: https://hapgood.us/2015/10/17/the-garden-and-the-stream-a-technopastoral/
+
+Key ideas:
+
+--
+- Streams (e.g. social media feeds) are essentially ephemeral and designed for
+  passive consumption. To know what a post means, you have to know when it
+  happened and who made it.
+
+--
+- Gardens are more timeless. They have an identity and a legible, mutable
+  _current state_. They are built up over time as the gardener curates and
+  arranges ideas in the way that's most pleasing or useful to them.
+
+---
+
+## Digital Garden = Bliki
+
+> to link, annotate, change, summarize, copy, and share — these are the verbs of gardening.
+
+<cite>Mike Caulfield</cite>
+
+---
+
+## Digital Garden = Bliki
+
+In 2021, Maggie Appleton wrote "[A Brief History &amp; Ethos of the Digital Garden]"
+— using the term (inspired by Caulfield?) that had by then become current. Her post
+is an extremely in-depth and well-researched timeline of the evolution of this
+idea — well worth reading if you want to know all the historical details.
+
+[A Brief History &amp; Ethos of the Digital Garden]: https://maggieappleton.com/garden-history
+
+---
+
+## What I like about blikis (versus blogs)
+
+--
+- They're easy to start
+
+--
+- They're easy to expand
+
+--
+- They're public, but not published
+
+--
+- I don't have to write introductions, conclusions, or any of the other crap that
+  blog posts require
+
+---
+
+## What I like about blikis (versus books)
+
+--
+- I don't have to decide what order my pages or chapters go in
+
+--
+- I don't have to worry about whether my readers will already be familiar with
+  a given concept or not
+
+--
+- I can explore lots of different (competing or complementary) ideas
+
+---
+
+## What I like about blikiing (as a process)
+
+--
+- Blikis give me feedback about my ideas
+
+--
+- Blikis invite maintenance but don't demand it
+
+--
+
+Blikis grow like crystals in a solution. Ideas float around in your head until
+they stick somewhere. All you need to do is create a place for them to stick.
+
+The more places (i.e. pages) you have, and the stickier they are, the better
+your bliki will grow. 
+
+???
+
+Re: feedback: pages about good ideas tend to have many incoming links, many
+outgoing links, and many edits that add supporting data, quotes, etc. In other
+words, the more related something is, the better it's likely to be.
+
+Re: maintenance: if I don't make a blog post for 6 months, my blog looks "dead"
+to anyone passing by. The reason for that is, blog posts occur in a specific
+time and in response to a particular (implicit) cultural context, so they are
+ephemeral. Wiki pages are timeless and link explicitly to their context, so
+wikis never die.
+
+---
+
+## Tools and tricks
+
+- I use a GitHub Wiki to host my bliki. (Did you know that every GitHub repo
+  has a wiki?)
+- GitHub Wikis are just Git repos with Markdown files in them. I cloned mine
+  to my computer so I can edit it with [Obsidian].
+- I name my wiki pages in `PascalCase` and use `[[DoubleSquareBrackets]]`
+  for easy linking.
+
+[Obsidian]: https://obsidian.md/
+
+---
+
+## Tools and tricks
+
+I recommend using some kind of web-based CMS for your bliki (e.g. GitHub Wiki,
+MediaWiki). _Not_ a static site generator.
+
+Why?
+
+- Edit from anywhere
+- Looks rough and impersonal — sets readers' expectations and keeps you
+  from obsessing about making your site "nice."
+
+---
+
+## Tools and tricks
+
+Worried about putting your half-baked ideas out there for the world to see?
+Give them an [EpistemicStatus] tag.
+
+[EpistemicStatus]: https://github.com/benchristel/benchristel.github.io/wiki/EpistemicStatus
+
+---
+
+## Tools and tricks
+
+Two ways to grow a bliki:
+
+- Page first
+- Link first
+
+Red links are like a built-in TODO list.
+
+---
+
+## If you make a bliki / digital garden about software
+
+Tell me about it! <mailto:ben.christel@gmail.com>
+
+I'm always looking for new sites to link to.
+
+---
+
+## [Bliki Tour](https://github.com/benchristel/benchristel.github.io/wiki/WhatMakesABlikiWork)
+
+---
+
+## Further Reading
+
+- &ldquo;[As We May Think]&rdquo; (pdf). Vannevar Bush, 1945.
+- [C2 Wiki] — The original wiki. Ward Cunningham, 1994.
+- &ldquo;[What Isa Bliki].&rdquo; Martin Fowler, 2003.
+- &ldquo;[The Garden and the Stream: A Technopastoral].&rdquo; Mike Caulfield, 2015.
+- &ldquo;[How the Blog Broke the Web].&rdquo; Amy Hoy, circa 2017.
+- &ldquo;[A Brief History &amp; Ethos of the Digital Garden].&rdquo; Maggie Appleton, 2021.
+
+[As We May Think]: https://dl.acm.org/doi/pdf/10.1145/227181.227186
+[C2 Wiki]: https://wiki.c2.com/
+[How the Blog Broke the Web]: https://stackingthebricks.com/how-blogs-broke-the-web/
+
+    </textarea>
+    <script src="../lib/remark.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

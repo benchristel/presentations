@@ -1,0 +1,50 @@
+
+<!--
+
+## History of the genre
+
+--
+In 1998, Mark Bernstein wrote &ldquo;[Hypertext Gardens: Delightful Vistas],&rdquo; an
+interactive manifesto for the emerging medium of cyberspace.
+
+[Hypertext Gardens: Delightful Vistas]: http://www.eastgate.com/garden/Enter.html
+
+---
+
+.too-tall[
+![screenshot of "Hypertext Gardens: Delightful Vistas"](hypertext-gardens.png)
+]
+
+---
+
+## History of the genre
+
+Key ideas:
+
+--
+- Navigation need not be sequential or hierarchical
+
+--
+- The form of a website primes the reader's expectations
+
+--
+- Serendipity and exploration are delightful
+
+---
+
+## History of the genre
+
+- In 2003, Martin Fowler coined the term "Bliki," in "[What Isa Bliki]"
+
+[What Isa Bliki]: https://martinfowler.com/bliki/WhatIsaBliki.html
+
+--
+> I decided I wanted something that was a cross between a wiki and a blog -
+> which Ward Cunningham immediately dubbed a bliki. Like a blog, it allows me
+> to post short thoughts when I have them. Like a wiki it will build up a body
+> of cross-linked pieces that I hope will still be interesting in a year's time.
+
+<cite>Martin Fowler</cite>
+
+---
+-->
