@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Collaboration Beyond Coordination</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style>
+        @font-face {
+            font-family: 'Oswald';
+            src: url("../lib/Oswald-VariableFont_wght.ttf");
+        }
+
+        body {
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+        }
+
+        .remark-slide-content {
+            background: #21242c;
+            color: #ffeec2;
+            font-size: 32px;
+            font-family: Oswald, Arial, Helvetica, sans-serif;
+        }
+
+        .remark-slide-content.big p {
+            font-size: 2em;
+        }
+
+        h1, h2, h3 {
+            font-weight: normal;
+        }
+
+        .remark-slide-content h1 {
+            font-size: 2.5em;
+        }
+
+        .remark-code, .remark-inline-code {
+            font-family: 'Ubuntu Mono', monospace;
+            text-align: left;
+        }
+
+        .too-tall img {
+            max-height: 500px;
+        }
+
+        strong {
+            font-weight: normal;
+            color: #f86;
+        }
+
+        blockquote {
+            border-inline-start: 0.5em solid #fff2;
+            padding-inline-start: 1em;
+        }
+
+        a, a:visited {
+            color: inherit;
+        }
+
+        blockquote + p {
+            text-indent: 2.75em;
+        }
+
+        blockquote + p::before {
+            content: "—";
+            /*display: inline-block;*/
+        }
+    </style>
+</head>
+<body>
+<textarea id="source">
+
+class: middle
+
+# Collaboration<br>Beyond Coordination<br><br>
+
+---
+
+class: big
+
+How do you make progress
+--
+ when everything is changing
+--
+ and 99.9% of it is out of your control?
+
+---
+
+class: center, middle
+
+.too-tall[
+    ![the Tower of Babel](babel.png)
+]
+
+???
+
+We'd like to think that we're building on solid foundations.
+Often, it feels like we are.
+
+In reality, though, everything in the computing world is changing
+all the time, (as I'm sure you're aware)
+
+Yet a lot of things seem pretty much constant.
+
+- I can visit a website that hasn't been updated since 1995, and it still displays
+  pretty much the way the author intended. Even the JavaScript still works!
+- I can use my modern PC to play games that were written in the '90s and originally distributed on floppy disks.
+- I can compile a Go program written in 2012 with a compiler released in 2020, and run it on a Linux kernel from 2025.
+
+...and I can do all this without help from any of the maintainers of the systems involved!
+
+How is this possible?
+
+---
+
+class: middle, big
+
+The more things change,<br>the more they stay the same
+
+???
+
+It's tempting to think that stability is an eternal property of the universe.
+
+---
+
+class: middle, big
+
+~~The more things change,<br>the more they stay the same~~ ❌
+
+???
+
+It is not.
+
+---
+
+class: middle, big
+
+Software Engineering ✅
+
+???
+
+What actually allows these systems to keep working is, of course, software engineering.
+
+---
+
+class: middle, big
+
+These systems guarantee backward compatibility
+
+???
+
+More specifically, the pieces that make up these systems are built with backward compatibility in
+mind.
+
+In this talk, I'm going to give a brief overview of what that actually means and how to do it.
+
+---
+
+class: middle
+
+> As it turns out, “don’t break the Web” is **the number one design principle** for HTML, CSS, JavaScript, and any
+> other standard that’s widely used on the Web.
+
+[Mathias Bynens, Google](https://developer.chrome.com/blog/smooshgate/#why_don%E2%80%99t_we_just_fix_mootools)
+
+???
+
+This is really, really important.
+
+---
+
+class: middle
+
+> Breaking user programs simply isn't acceptable. \[...\] We know that people use old binaries for years and years, and that making a new \[Linux\] release doesn't mean that you can just throw that out. **You can trust us.**
+
+[Linus Torvalds](https://yarchive.net/comp/linux/gcc_vs_kernel_stability.html)
+
+---
+
+class: middle, big
+
+\#SmooshGate
+
+---
+
+Around 2018, a new method got added to JavaScript arrays: `Array.flat()`
+
+What flat does is not particularly important for this story, but it operates
+on an array of arrays, and concatenates them into a single array.
+
+When the method was originally proposed, it was called `flatten`. After all,
+that's what most other languages call it. `flatten` is a verb, and `flat` is not.
+So why did the name change?
+
+The problem was, a popular library called MooTools had already added their own
+`flatten` method to arrays, but they did it in a way that subtly depended on the
+method _not_ existing as a built-in JS feature. So when the built-in flatten method
+shipped to Firefox Nightly, existing websites that used MooTools stopped working
+in that browser.
+
+Now, to be clear, patching new behavior onto built-in language features like MooTools
+was doing is NOT a good practice, and SmooshGate exemplifies why.
+
+So, what do you think the web standards people did?
+
+---
+
+## Reversibility
+
+    </textarea>
+<script src="../lib/remark.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+    var slideshow = remark.create();
+</script>
+</body>
+</html>
