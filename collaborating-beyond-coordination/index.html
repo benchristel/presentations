@@ -17,11 +17,26 @@
             background: #21242c;
             color: #ffeec2;
             font-size: 32px;
+            padding-inline: 96px;
+            padding-block: 48px;
             font-family: Oswald, Arial, Helvetica, sans-serif;
+            letter-spacing: 0.01em;
         }
 
-        .remark-slide-content.big p {
-            font-size: 2em;
+        .remark-slide-content .remark-slide-number {
+            font-size: 1rem;
+        }
+
+        .remark-slide-content.huge {
+            font-size: 144px;
+        }
+
+        .remark-slide-content.big {
+            font-size: 48px;
+        }
+
+        .remark-slide-content.small {
+            font-size: 24px;
         }
 
         h1, h2, h3 {
@@ -35,6 +50,7 @@
         .remark-code, .remark-inline-code {
             font-family: 'Ubuntu Mono', monospace;
             text-align: left;
+            letter-spacing: 0;
         }
 
         .too-tall img {
@@ -63,6 +79,10 @@
             content: "—";
             /*display: inline-block;*/
         }
+
+        .letter-list-next + * {
+            list-style-type: upper-alpha;
+        }
     </style>
 </head>
 <body>
@@ -70,7 +90,7 @@
 
 class: middle
 
-# Collaboration<br>Beyond Coordination<br><br>
+# Collaboration<br>Beyond Coordination
 
 ---
 
@@ -78,7 +98,7 @@ class: big
 
 How do you make progress
 --
- when everything is changing
+ when **everything is changing**
 --
  and 99.9% of it is out of your control?
 
@@ -111,27 +131,7 @@ How is this possible?
 
 ---
 
-class: middle, big
-
-The more things change,<br>the more they stay the same
-
-???
-
-It's tempting to think that stability is an eternal property of the universe.
-
----
-
-class: middle, big
-
-~~The more things change,<br>the more they stay the same~~ ❌
-
-???
-
-It is not.
-
----
-
-class: middle, big
+class: center, middle, big
 
 Software Engineering ✅
 
@@ -151,6 +151,12 @@ More specifically, the pieces that make up these systems are built with backward
 mind.
 
 In this talk, I'm going to give a brief overview of what that actually means and how to do it.
+
+---
+
+class: center, middle
+
+Backward compatibility == &ldquo;Don't break other people's stuff&rdquo;
 
 ---
 
@@ -181,6 +187,32 @@ class: middle, big
 
 ---
 
+class: center, middle, big
+
+`array.flatten()`
+
+---
+
+class: center, middle, big
+
+![Firefox Nightly](firefox-nightly.png)
+
+---
+
+class: center, middle, huge
+
+😞
+
+---
+
+class: center, middle
+
+![Mootools](mootools.png)
+
+---
+
+???
+
 Around 2018, a new method got added to JavaScript arrays: `Array.flat()`
 
 What flat does is not particularly important for this story, but it operates
@@ -203,7 +235,135 @@ So, what do you think the web standards people did?
 
 ---
 
+class: small
+
+## Choose your own adventure
+
+<div class="letter-list-next"></div>
+
+1. Release `flatten()` as-is, and break websites using MooTools.
+
+--
+
+2. Contact the MooTools developers and get them to fix their code.
+
+--
+
+3. Contact the website maintainers and get them to stop using MooTools.
+
+--
+
+4. Change the `flatten()` proposal to be compatible with MooTools and existing websites.
+
+--
+
+5. Give up, retire to the country, and start a pigeon-training business.
+
+---
+
+## What is Backward Compatibility?
+
+- A property of a **change** to a published interface
+- A **guarantee** we make to consumers of our interfaces
+
+---
+
+class: center, middle
+
+## The Backward Compatibility Guarantee
+
+&ldquo;If your code/data works with the old version of our interface, then it will also work the new version.&rdquo;
+
+---
+
+class: center, middle, big
+
+Almost everything that exists today<br>&nbsp;
+--
+also existed **yesterday**
+
+???
+
+Almost everything that exists today also existed yesterday, and all that existing stuff is hugely valuable.
+You want that code you wrote last week to keep working next week. You want the files you save to still be readable in 10 years.
+When ECMA decides to add a new feature to JavaScript, we could try to stop the world and rewrite all existing websites.
+But that would be really expensive, maybe impossible. And throwing away all that value would be expensive too.
+
+---
+
+class: center, middle, big
+
+Backward compatibility<br>makes progress **affordable**
+
+---
+
+class: center, middle, big
+
+Which brings me to **us**...
+
+---
+
+## Note:
+
+- I mean "interface" in the broadest sense
+- Backward compatibility is **not required** (though often helpful) for **unpublished** interfaces
+
+---
+
+## Backward-compatible changes to GraphQL APIs
+
+- Adding a new, optional input value
+- Adding an optional field
+- Making an optional field required
+
+---
+
+## Backward-compatible changes to Go `struct` types
+
+- Adding a new field (assuming the zero value is a good default)
+- Adding a new method (i.e. function with a receiver argument)
+
+---
+
+## Backward-compatible changes to Go `interface` types
+
+- Adding a method to an interface you publish and implement
+- Removing a method from an interface that you define and call
+
+---
+
+class: big
+
+## How am I supposed to remember all this?
+
+--
+
+You're not.
+
+---
+
+class: middle, big
+
+- tests
+- &nbsp;
+
+---
+
+class: middle, big
+
+- tests
+- types
+
+---
+
 ## Reversibility
+
+---
+
+## Challenges / Open Questions
+
+- How can we speed up the process of splitting a big breaking change into small, backward-compatible changes?
+- How can we reduce the risk of abandoning a sequence of changes halfway through, not finishing or rolling back?
 
     </textarea>
 <script src="../lib/remark.js" type="text/javascript">
