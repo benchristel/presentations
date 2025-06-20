@@ -32,7 +32,7 @@
         }
 
         .remark-slide-content.big {
-            font-size: 48px;
+            font-size: 40px;
         }
 
         .remark-slide-content.small {
@@ -51,6 +51,10 @@
             font-family: 'Ubuntu Mono', monospace;
             text-align: left;
             letter-spacing: 0;
+        }
+
+        .remark-code-line:has(.hljs-addition) {
+            background: #efe;
         }
 
         .too-tall img {
@@ -83,6 +87,13 @@
         .letter-list-next + * {
             list-style-type: upper-alpha;
         }
+
+        .box {
+            display: inline-block;
+            vertical-align: middle;
+            padding: 0.25em 1em;
+            outline: 1px solid;
+        }
     </style>
 </head>
 <body>
@@ -101,6 +112,34 @@ How do you make progress
  when **everything is changing**
 --
  and 99.9% of it is out of your control?
+
+---
+
+## Table of Contents
+
+1. What is backward compatibility?
+
+--
+
+2. Why does it matter to us? When does it matter?
+
+--
+
+3. Case study: #SmooshGate
+
+--
+
+4. How to do it (published API, tests and types)
+
+--
+
+5. Specific examples and type theory
+
+---
+
+class: center, middle
+
+## What is backward compatibility?
 
 ---
 
@@ -131,7 +170,7 @@ How is this possible?
 
 ---
 
-class: center, middle, big
+class: center, middle
 
 Software Engineering ✅
 
@@ -141,7 +180,7 @@ What actually allows these systems to keep working is, of course, software engin
 
 ---
 
-class: middle, big
+class: center, middle
 
 These systems guarantee backward compatibility
 
@@ -150,13 +189,81 @@ These systems guarantee backward compatibility
 More specifically, the pieces that make up these systems are built with backward compatibility in
 mind.
 
-In this talk, I'm going to give a brief overview of what that actually means and how to do it.
-
 ---
 
 class: center, middle
 
 Backward compatibility == &ldquo;Don't break other people's stuff&rdquo;
+
+---
+
+## Backward compatibility is...
+
+- A property of a **change** to a published interface
+- A **guarantee** we make to consumers of our interfaces
+
+---
+
+class: center, middle
+
+## The Backward Compatibility Guarantee
+
+&ldquo;If your code/data works with the old version of our interface, then it will also work the new version.&rdquo;
+
+---
+
+class: center, middle
+
+.box[UI] &lrarr; .box[Service] &lrarr; .box[Data]
+
+NOTE: &lrarr; = interface!
+
+???
+
+By "interface" I just mean "how something look from the outside" or "how you
+interact with it from the outside" 
+
+---
+
+class: center, middle
+
+## Why does it matter?
+
+---
+
+class: center, middle, big
+
+Almost everything that exists today<br>&nbsp;
+--
+also existed **yesterday**
+
+???
+
+Almost everything that exists today also existed yesterday, and all that existing stuff is hugely valuable.
+You want that code you wrote last week to keep working next week. You want the files you save to still be readable in 10 years.
+
+---
+
+class: center, middle, big
+
+We can't **rebuild the world** every time<br>we want to change one thing
+
+???
+
+When ECMA decides to add a new feature to JavaScript, we could try to stop the world and rewrite all existing websites.
+But that would be really expensive, maybe impossible. And throwing away all that value would be expensive too.
+
+---
+
+class: center, middle, big
+
+Backward compatibility<br>makes progress **affordable**
+
+---
+
+class: center, middle, big
+
+Which brings me to **us**...
 
 ---
 
@@ -181,9 +288,30 @@ class: middle
 
 ---
 
-class: middle, big
+class: center, middle
 
-\#SmooshGate
+## When does backward compatibility matter?
+
+---
+
+class: center, middle
+
+When two systems interact and they are **versioned or deployed separately**,
+changes to either must be backward compatible with the other.
+
+---
+
+## Examples:
+
+- Frontend and backend
+- Service APIs
+- Library APIs
+
+---
+
+class: center, middle
+
+## \#SmooshGate
 
 ---
 
@@ -261,48 +389,6 @@ class: small
 
 ---
 
-## What is Backward Compatibility?
-
-- A property of a **change** to a published interface
-- A **guarantee** we make to consumers of our interfaces
-
----
-
-class: center, middle
-
-## The Backward Compatibility Guarantee
-
-&ldquo;If your code/data works with the old version of our interface, then it will also work the new version.&rdquo;
-
----
-
-class: center, middle, big
-
-Almost everything that exists today<br>&nbsp;
---
-also existed **yesterday**
-
-???
-
-Almost everything that exists today also existed yesterday, and all that existing stuff is hugely valuable.
-You want that code you wrote last week to keep working next week. You want the files you save to still be readable in 10 years.
-When ECMA decides to add a new feature to JavaScript, we could try to stop the world and rewrite all existing websites.
-But that would be really expensive, maybe impossible. And throwing away all that value would be expensive too.
-
----
-
-class: center, middle, big
-
-Backward compatibility<br>makes progress **affordable**
-
----
-
-class: center, middle, big
-
-Which brings me to **us**...
-
----
-
 ## Note:
 
 - I mean "interface" in the broadest sense
@@ -310,7 +396,141 @@ Which brings me to **us**...
 
 ---
 
-## Backward-compatible changes to GraphQL APIs
+## Example: A GraphQL API
+
+```graphql
+type Query {
+    grade(attempt: ProblemAttemptToGrade!) Grade!
+}
+
+input ProblemAttemptToGrade {
+    # JSON
+    userInput: String!
+    # JSON
+    assessmentItem: String!
+}
+
+type Grade {
+    score: Score!
+    feedback: String
+}
+
+enum Score {
+    CREDIT
+    NO_CREDIT
+}
+```
+
+---
+
+## Scenario: Locale-specific grading
+
+Different locales use different number formats! `1.0` vs. `1,0`
+
+```diff
+  input ProblemAttemptToGrade {
+      """JSON"""
+      userInput: String!
+      # JSON
+      assessmentItem: String!
++     # e.g. "en"
++     locale: String!
+  }
+```
+
+---
+
+## Backward-compatible enum handling
+
+Trick: shift the boundary so the breaking change is entirely within one
+codebase
+
+```ts
+// handwritten type
+type Score = "CREDIT" | "NO_CREDIT";
+function parseScore(raw: unknown): Score {
+    switch (raw) {
+        case "CREDIT":    return raw;
+        case "NO_CREDIT": return raw;
+        default:
+            throw Error("Invalid score: " + raw);
+    }
+}
+```
+
+---
+
+## Backward-compatible enum handling 2
+
+```ts
+// handwritten type
+type Score = "CREDIT" | "NO_CREDIT";
+function parseScore(raw: unknown): Score {
+    switch (raw) {
+        case "CREDIT":    return raw;
+        case "NO_CREDIT": return raw;
+        default:          return "NO_CREDIT";
+    }
+}
+```
+
+---
+
+## Backward-compatible enum handling 3
+
+**BREAKING CHANGE:** new `Score` variant. At this point, everything that uses
+`Score` would need to be updated.
+
+```ts
+// handwritten type
+type Score = "CREDIT" | "NO_CREDIT" | "INVALID";
+function parseScore(raw: unknown): Score {
+    switch (raw) {
+        case "CREDIT":    return raw;
+        case "NO_CREDIT": return raw;
+        default:          return "NO_CREDIT";
+    }
+}
+```
+
+---
+
+## Backward-compatible enum handling 4
+
+```ts
+// handwritten type
+type Score = "CREDIT" | "NO_CREDIT" | "INVALID";
+function parseScore(raw: unknown): Score {
+    switch (raw) {
+        case "CREDIT":    return raw;
+        case "NO_CREDIT": return raw;
+        case "INVALID":   return raw;
+        default:
+            throw Error("Invalid score: " + raw)
+    }
+}
+```
+
+---
+
+class: center, middle, big
+
+Problem: backend and frontend enum types can now get out of sync.
+
+---
+
+## Typetests
+
+```ts
+// Asserts that `Score` does not contain any variants not present
+// in `GqlScore`.
+// `Score` is handwritten; `GqlScore` is generated.
+valueOfType<Score>() satisfies GqlScore;
+```
+
+---
+
+## Summary: backward-compatible changes to GraphQL APIs
 
 - Adding a new, optional input value
 - Adding an optional field
