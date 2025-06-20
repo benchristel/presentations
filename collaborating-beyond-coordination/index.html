@@ -434,14 +434,10 @@ class: center, middle
 
 ```graphql
 type Query {
-    grade(attempt: ProblemAttemptToGrade!) Grade!
-}
-
-input ProblemAttemptToGrade {
-    # JSON
-    userInput: String!
-    # JSON
-    assessmentItem: String!
+    grade(
+        assessmentItem: String! # JSON
+        userInput: String! # JSON
+    ) Grade!
 }
 
 type Grade {
@@ -464,13 +460,12 @@ Different locales use different number formats! `1.0` vs. `1,0`
 --
 
 ```diff
-  input ProblemAttemptToGrade {
-      # JSON
-      userInput: String!
-      # JSON
-      assessmentItem: String!
-+     # e.g. "en"
-+     locale: String!
+  type Query {
+      grade(
+          assessmentItem: String! # JSON
+          userInput: String! # JSON
++         locale: String!
+      ) Grade!
   }
 ```
 
@@ -483,14 +478,13 @@ Different locales use different number formats! `1.0` vs. `1,0`
 ## Solution: Make `locale` optional
 
 ```diff
-  input ProblemAttemptToGrade {
-      # JSON
-      userInput: String!
-      # JSON
-      assessmentItem: String!
-      # e.g. "en"
--     locale: String!
-+     locale: String
+  type Query {
+      grade(
+          assessmentItem: String! # JSON
+          userInput: String! # JSON
+-         locale: String!
++         locale: String
+      ) Grade!
   }
 ```
 
