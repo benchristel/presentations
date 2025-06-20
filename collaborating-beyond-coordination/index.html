@@ -57,6 +57,10 @@
             background: #efe;
         }
 
+        .remark-code-line:has(.hljs-deletion) {
+            background: #fee;
+        }
+
         .too-tall img {
             max-height: 500px;
         }
@@ -387,12 +391,42 @@ class: small
 
 5. Give up, retire to the country, and start a pigeon-training business.
 
+
 ---
 
-## Note:
+class: center, middle, big
 
-- I mean "interface" in the broadest sense
-- Backward compatibility is **not required** (though often helpful) for **unpublished** interfaces
+`array.flat()`
+
+---
+
+class: center, middle
+
+## How to make backward-compatible changes
+
+---
+
+class: center, middle
+
+## Step 1: Define your published interface
+
+---
+
+## Step 1: Define your published interface
+
+- API documentation
+
+--
+
+- GraphQL schema
+
+--
+
+- Test suite
+
+--
+
+- Typetests
 
 ---
 
@@ -427,9 +461,11 @@ enum Score {
 
 Different locales use different number formats! `1.0` vs. `1,0`
 
+--
+
 ```diff
   input ProblemAttemptToGrade {
-      """JSON"""
+      # JSON
       userInput: String!
       # JSON
       assessmentItem: String!
@@ -437,6 +473,40 @@ Different locales use different number formats! `1.0` vs. `1,0`
 +     locale: String!
   }
 ```
+
+--
+
+**Breaking change!** `locale` is required
+
+---
+
+## Solution: Make `locale` optional
+
+```diff
+  input ProblemAttemptToGrade {
+      # JSON
+      userInput: String!
+      # JSON
+      assessmentItem: String!
+      # e.g. "en"
+-     locale: String!
++     locale: String
+  }
+```
+
+---
+
+## Problem: clients should _always_ provide a locale!
+
+- Solution: update all clients to pass `locale`
+
+- and _then_ update the GraphQL schema to make `locale` required.
+
+--
+
+- Making locale required is technically a breaking change
+
+- But in practice we only need to worry about breaking clients that _actually exist_.
 
 ---
 
@@ -488,22 +558,6 @@ function parseScore(raw: unknown): Score {
     switch (raw) {
         case "CREDIT":    return raw;
         case "NO_CREDIT": return raw;
-        default:          return "NO_CREDIT";
-    }
-}
-```
-
----
-
-## Backward-compatible enum handling 4
-
-```ts
-// handwritten type
-type Score = "CREDIT" | "NO_CREDIT" | "INVALID";
-function parseScore(raw: unknown): Score {
-    switch (raw) {
-        case "CREDIT":    return raw;
-        case "NO_CREDIT": return raw;
         case "INVALID":   return raw;
         default:
             throw Error("Invalid score: " + raw)
@@ -515,7 +569,7 @@ function parseScore(raw: unknown): Score {
 
 class: center, middle, big
 
-Problem: backend and frontend enum types can now get out of sync.
+**Problem:** backend and frontend enum types can now get out of sync.
 
 ---
 
