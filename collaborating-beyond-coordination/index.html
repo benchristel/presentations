@@ -581,8 +581,7 @@ valueOfType<Score>() satisfies GqlScore;
 ## Summary: backward-compatible changes to GraphQL APIs
 
 - Adding a new, optional input value
-- Adding an optional field
-- Making an optional field required
+- Adding a response field
 
 ---
 
@@ -595,8 +594,10 @@ valueOfType<Score>() satisfies GqlScore;
 
 ## Backward-compatible changes to Go `interface` types
 
-- Adding a method to an interface you publish and implement
-- Removing a method from an interface that you define and call
+Depends on who implements the interface and who calls it.
+
+- Adding a method to an interface (assuming no one but you implements the interface)
+- Removing a method from an interface (assuming no one but you calls the interface)
 
 ---
 
@@ -624,7 +625,29 @@ class: middle, big
 
 ---
 
-## Reversibility
+class: center, middle
+
+Changing or removing tests is a sign that you're breaking backward compatibility!
+
+---
+
+class: center, middle
+
+Treat tests as an **append-only log of guarantees** you make to your callers.
+
+---
+
+class: center, middle
+
+Prefer testing at **published interfaces** that need to be stable.
+
+---
+
+class: center, middle
+
+## API Design Tip
+
+**Don't over-promise.** Start simple and add more functionality if needed.
 
 ---
 
