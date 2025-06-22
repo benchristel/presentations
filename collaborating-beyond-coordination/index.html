@@ -119,34 +119,6 @@ How do you make progress
 
 ---
 
-## Table of Contents
-
-1. What is backward compatibility?
-
---
-
-2. Why does it matter to us? When does it matter?
-
---
-
-3. Case study: #SmooshGate
-
---
-
-4. How to do it (published API, tests and types)
-
---
-
-5. Specific examples and type theory
-
----
-
-class: center, middle
-
-## What is backward compatibility?
-
----
-
 class: center, middle
 
 .too-tall[
@@ -184,14 +156,55 @@ What actually allows these systems to keep working is, of course, software engin
 
 ---
 
+class: middle
+
+> As it turns out, “don’t break the Web” is **the number one design principle** for HTML, CSS, JavaScript, and any
+> other standard that’s widely used on the Web.
+
+[Mathias Bynens, Google](https://developer.chrome.com/blog/smooshgate/#why_don%E2%80%99t_we_just_fix_mootools)
+
+???
+
+This is really, really important.
+
+---
+
+class: middle
+
+> Breaking user programs simply isn't acceptable. \[...\] We know that people use old binaries for years and years, and that making a new \[Linux\] release doesn't mean that you can just throw that out. **You can trust us.**
+
+[Linus Torvalds](https://yarchive.net/comp/linux/gcc_vs_kernel_stability.html)
+
+---
+
 class: center, middle
 
-These systems guarantee backward compatibility
+These systems guarantee **backward compatibility**
 
 ???
 
 More specifically, the pieces that make up these systems are built with backward compatibility in
 mind.
+
+---
+
+## Table of Contents
+
+1. What is backward compatibility?
+
+--
+
+2. Why do we care? When does it matter?
+
+--
+
+3. How to do it
+
+---
+
+class: center, middle
+
+## 1. What is backward compatibility?
 
 ---
 
@@ -218,9 +231,15 @@ class: center, middle
 
 class: center, middle
 
+A change that is not backward compatible is called a **breaking change**.
+
+---
+
+class: center, middle
+
 .box[UI] &lrarr; .box[Service] &lrarr; .box[Data]
 
-NOTE: &lrarr; = interface!
+NOTE: &lrarr; = interface
 
 ???
 
@@ -231,7 +250,7 @@ interact with it from the outside"
 
 class: center, middle
 
-## Why does it matter?
+## 2. Why do we care?
 
 ---
 
@@ -271,30 +290,9 @@ Which brings me to **us**...
 
 ---
 
-class: middle
-
-> As it turns out, “don’t break the Web” is **the number one design principle** for HTML, CSS, JavaScript, and any
-> other standard that’s widely used on the Web.
-
-[Mathias Bynens, Google](https://developer.chrome.com/blog/smooshgate/#why_don%E2%80%99t_we_just_fix_mootools)
-
-???
-
-This is really, really important.
-
----
-
-class: middle
-
-> Breaking user programs simply isn't acceptable. \[...\] We know that people use old binaries for years and years, and that making a new \[Linux\] release doesn't mean that you can just throw that out. **You can trust us.**
-
-[Linus Torvalds](https://yarchive.net/comp/linux/gcc_vs_kernel_stability.html)
-
----
-
 class: center, middle
 
-## When does backward compatibility matter?
+## 2.5. When does backward compatibility matter?
 
 ---
 
@@ -315,94 +313,13 @@ changes to either must be backward compatible with the other.
 
 class: center, middle
 
-## \#SmooshGate
-
----
-
-class: center, middle, big
-
-`array.flatten()`
-
----
-
-class: center, middle, big
-
-![Firefox Nightly](firefox-nightly.png)
-
----
-
-class: center, middle, huge
-
-😞
+**Within a single service or package**, backward compatibility isn't as important.
 
 ---
 
 class: center, middle
 
-![Mootools](mootools.png)
-
----
-
-???
-
-Around 2018, a new method got added to JavaScript arrays: `Array.flat()`
-
-What flat does is not particularly important for this story, but it operates
-on an array of arrays, and concatenates them into a single array.
-
-When the method was originally proposed, it was called `flatten`. After all,
-that's what most other languages call it. `flatten` is a verb, and `flat` is not.
-So why did the name change?
-
-The problem was, a popular library called MooTools had already added their own
-`flatten` method to arrays, but they did it in a way that subtly depended on the
-method _not_ existing as a built-in JS feature. So when the built-in flatten method
-shipped to Firefox Nightly, existing websites that used MooTools stopped working
-in that browser.
-
-Now, to be clear, patching new behavior onto built-in language features like MooTools
-was doing is NOT a good practice, and SmooshGate exemplifies why.
-
-So, what do you think the web standards people did?
-
----
-
-class: small
-
-## Choose your own adventure
-
-<div class="letter-list-next"></div>
-
-1. Release `flatten()` as-is, and break websites using MooTools.
-
---
-
-2. Contact the MooTools developers and get them to fix their code.
-
---
-
-3. Contact the website maintainers and get them to stop using MooTools.
-
---
-
-4. Change the `flatten()` proposal to be compatible with MooTools and existing websites.
-
---
-
-5. Give up, retire to the country, and start a pigeon-training business.
-
-
----
-
-class: center, middle, big
-
-`array.flat()`
-
----
-
-class: center, middle
-
-## How to make backward-compatible changes
+## 3. How to make backward-compatible changes
 
 ---
 
@@ -423,10 +340,6 @@ class: center, middle
 --
 
 - Test suite
-
---
-
-- Typetests
 
 ---
 
@@ -469,6 +382,10 @@ Different locales use different number formats! `1.0` vs. `1,0`
   }
 ```
 
+???
+
+What do you think? Is this change backward-compatible or not?
+
 --
 
 **Breaking change!** `locale` is required
@@ -504,58 +421,73 @@ Different locales use different number formats! `1.0` vs. `1,0`
 
 ---
 
-## Backward-compatible enum handling
+## Example 2: Changing an Enum
 
-Trick: shift the boundary so the breaking change is entirely within one
-codebase
+```diff
+  type Query {
+      grade(
+          assessmentItem: String! # JSON
+          userInput: String! # JSON
+      ) Grade!
+  }
+  
+  type Grade {
+      score: Score!
+      feedback: String
+  }
+  
+  enum Score {
+      CREDIT
+      NO_CREDIT
++     # The submitted answer was incomplete. The learner can try again.
++     INVALID
+  }
+```
+
+???
+
+What do you think about this change? Is it backward compatible or not?
+
+---
+
+## Imagine the frontend code
 
 ```ts
-// handwritten type
-type Score = "CREDIT" | "NO_CREDIT";
-function parseScore(raw: unknown): Score {
-    switch (raw) {
-        case "CREDIT":    return raw;
-        case "NO_CREDIT": return raw;
+function displayScore(score: GqlScore): string {
+    switch (score) {
+        case "CREDIT":
+            return "Correct!";
+        case "NO_CREDIT":
+            return "Not quite, try again.";
         default:
-            throw Error("Invalid score: " + raw);
+            throw Error("Unrecognized GqlScore: " + score);
     }
 }
 ```
 
 ---
 
-## Backward-compatible enum handling 2
+class: center, middle
 
-```ts
-// handwritten type
-type Score = "CREDIT" | "NO_CREDIT";
-function parseScore(raw: unknown): Score {
-    switch (raw) {
-        case "CREDIT":    return raw;
-        case "NO_CREDIT": return raw;
-        default:          return "NO_CREDIT";
-    }
-}
-```
+What if we just didn't throw? 🤔
 
 ---
 
-## Backward-compatible enum handling 3
-
-**BREAKING CHANGE:** new `Score` variant. At this point, everything that uses
-`Score` would need to be updated.
+## Even worse: undefined behavior!
 
 ```ts
-// handwritten type
-type Score = "CREDIT" | "NO_CREDIT" | "INVALID";
-function parseScore(raw: unknown): Score {
-    switch (raw) {
-        case "CREDIT":    return raw;
-        case "NO_CREDIT": return raw;
-        case "INVALID":   return raw;
-        default:
-            throw Error("Invalid score: " + raw)
+function displayScore(score: GqlScore): string {
+    if (score === "NO_CREDIT") {
+        return "Not quite, try again.";
     }
+    return "Correct!";
+}
+
+function handleQuestionCompleted(score: GqlScore): string {
+    if (score === "CREDIT") {
+        correctAnswers++;
+    }
+    return displayScore(score);
 }
 ```
 
@@ -563,18 +495,118 @@ function parseScore(raw: unknown): Score {
 
 class: center, middle, big
 
-**Problem:** backend and frontend enum types can now get out of sync.
+Since the backend change can't be made backward-compatible...
 
 ---
 
-## Typetests
+class: center, middle, big
+
+...we have to make the frontend<br>**forward-compatible**!
+
+---
+
+## Forward-compatible enum handling
+
+Trick: convert to a frontend-internal enum _in a single place_.
 
 ```ts
-// Asserts that `Score` does not contain any variants not present
-// in `GqlScore`.
-// `Score` is handwritten; `GqlScore` is generated.
-valueOfType<Score>() satisfies GqlScore;
+// handwritten type
+type Score = "credit" | "no-credit";
+function parseScore(raw: GqlScore): Score {
+    switch (raw) {
+        case "CREDIT":
+            return "credit";
+        default:
+            return "no-credit";
+    }
+}
 ```
+
+--
+
+Now, all unrecognized `GqlScore` values will be treated like `NO_CREDIT`.
+
+---
+
+## Forward-compatible enum handling 2
+
+We can use exhaustive switch statements in the rest of the code to make sure
+we handle all the cases.
+
+```ts
+function displayScore(score: Score): string {
+    switch (score) {
+        case "credit":
+            return "Correct!";
+        case "no-credit":
+            return "Not quite, try again.";
+        default:
+            // There will be a type error here if we didn't handle all cases
+            throw new UnreachableCaseError(score);
+    }
+}
+```
+
+---
+
+class: center, middle
+
+At this point, we can safely deploy the backend change to add `INVALID` to the
+GraphQL API.
+
+---
+
+## Forward-compatible enum handling 3
+
+Then we can update the frontend to handle the new case:
+
+```ts
+type Score = "credit" | "no-credit" | "invalid";
+function parseScore(raw: GqlScore): Score {
+    switch (raw) {
+        case "CREDIT":
+            return "credit";
+        case "INVALID":
+            return "invalid";
+        default:
+            return "no-credit";
+    }
+}
+```
+
+---
+
+## Backward-compatible enum handling 4
+
+Now the exhaustiveness check forces us to update the business logic at the
+same time.
+
+```ts
+function displayScore(score: Score): string {
+    switch (score) {
+        case "credit":
+            return "Correct!";
+        case "no-credit":
+            return "Not quite, try again.";
+        case "invalid":
+            return "Hmm, looks like your answer is incomplete."
+        default:
+            // There will be a type error here if we didn't handle all cases
+            throw new UnreachableCaseError(score);
+    }
+}
+```
+
+---
+
+class: center, middle
+
+Enums considered harmful?
+
+???
+
+I hope that if nothing else, this convinces you that enums need to be handled
+with care.
 
 ---
 
@@ -611,17 +643,9 @@ You're not.
 
 ---
 
-class: middle, big
+class: center, middle, big
 
-- tests
-- &nbsp;
-
----
-
-class: middle, big
-
-- tests
-- types
+☮️💖🌈 &nbsp;Tests are all you need! &nbsp;🌈💖☮️
 
 ---
 
