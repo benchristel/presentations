@@ -172,27 +172,6 @@ What actually allows these systems to keep working is, of course, software engin
 
 ---
 
-class: middle
-
-> As it turns out, “don’t break the Web” is **the number one design principle** for HTML, CSS, JavaScript, and any
-> other standard that’s widely used on the Web.
-
-[Mathias Bynens, Google](https://developer.chrome.com/blog/smooshgate/#why_don%E2%80%99t_we_just_fix_mootools)
-
-???
-
-This is really, really important.
-
----
-
-class: middle
-
-> Breaking user programs simply isn't acceptable. \[...\] We know that people use old binaries for years and years, and that making a new \[Linux\] release doesn't mean that you can just throw that out. **You can trust us.**
-
-[Linus Torvalds](https://yarchive.net/comp/linux/gcc_vs_kernel_stability.html)
-
----
-
 class: center, middle
 
 These systems guarantee **backward compatibility**
@@ -201,6 +180,8 @@ These systems guarantee **backward compatibility**
 
 More specifically, the pieces that make up these systems are built with backward compatibility in
 mind.
+
+This talk is about exactly how that works and how we can benefit from it.
 
 ---
 
@@ -227,6 +208,40 @@ class: center, middle
 class: center, middle
 
 Backward compatibility == &ldquo;Don't break other people's stuff&rdquo;
+
+---
+
+class: middle
+
+> As it turns out, “don’t break the Web” is **the number one design principle** for HTML, CSS, JavaScript, and any
+> other standard that’s widely used on the Web.
+
+[Mathias Bynens, Google](https://developer.chrome.com/blog/smooshgate/#why_don%E2%80%99t_we_just_fix_mootools)
+
+???
+
+Backward compatibility is what keeps the web working.
+
+(read quote)
+
+Web browsers have to stay backward compatible with existing websites.
+
+---
+
+class: middle
+
+> Breaking user programs simply isn't acceptable. \[...\] We know that people use old binaries for years and years, and that making a new \[Linux\] release doesn't mean that you can just throw that out. **You can trust us.**
+
+[Linus Torvalds](https://yarchive.net/comp/linux/gcc_vs_kernel_stability.html)
+
+???
+
+It's also what keeps Linux systems working even when they're upgraded frequently
+
+(read quote)
+
+This policy of never breaking user programs is a big part of why people trust
+Linux.
 
 ---
 
