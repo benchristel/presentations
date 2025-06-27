@@ -151,14 +151,42 @@ all the time, (as I'm sure you're aware)
 
 Yet a lot of things seem pretty much constant.
 
-- I can visit a website that hasn't been updated since 1995, and it still displays
-  pretty much the way the author intended. Even the JavaScript still works!
-- I can use my modern PC to play games that were written in the '90s and originally distributed on floppy disks.
 - I can compile a Go program written in 2012 with a compiler released in 2020, and run it on a Linux kernel from 2025.
 
 ...and I can do all this without help from any of the maintainers of the systems involved!
 
 How is this possible?
+
+---
+
+class: center, middle
+
+.too-tall[![screenshot of the SpaceJam website](spacejam.png)]
+
+???
+
+- I can visit a website that hasn't been updated since 1995, and it still displays
+  pretty much the way the author intended. Even the JavaScript still works!
+
+---
+
+class: center, middle
+
+.too-tall[![screenshot of Civilization II](civii.gif)]
+
+???
+
+- I can use my modern PC to play games that were written in the '90s and originally distributed on floppy disks.
+
+---
+
+class: center, middle
+
+.too-tall[![The Go gopher](gopher.png)]
+
+???
+
+- I can compile a Go program written in 2012 with a compiler released in 2020, and run it on a Linux kernel from 2025.
 
 ---
 
@@ -273,6 +301,12 @@ class: center, middle
 NOTE: &lrarr; = interface
 
 ???
+
+This becomes important when we have a system made out of multiple components and we can only update one component at a time.
+This is generally the case in a high-availability distributed system because you can't take the whole system down and you
+can't update your software on every machine at the same instant.
+
+The arrows going between the boxes represent the interfaces that have to stay backward-compatible.
 
 By "interface" I just mean "how something look from the outside" or "how you
 interact with it from the outside" 
@@ -440,6 +474,12 @@ What do you think? Is this change backward-compatible or not?
 
 ## Problem: clients should _always_ provide a locale!
 
+???
+
+How do you think we should solve this?
+
+--
+
 - Solution: update all clients to pass `locale`
 
 - and _then_ update the GraphQL schema to make `locale` required.
@@ -452,7 +492,7 @@ What do you think? Is this change backward-compatible or not?
 
 ---
 
-## Example 2: Changing an Enum
+## Scenario 2: Changing an Enum
 
 ```diff
   type Query {
@@ -474,6 +514,14 @@ What do you think? Is this change backward-compatible or not?
 +     INVALID
   }
 ```
+
+---
+
+class: center, middle
+
+## Live demo time!
+
+[TypeScript playground](https://www.typescriptlang.org/play/?#code/PTAEGUGMFMDsEMBOBLA9gLlAM2bAJqPKAM7QCOArnDKKliQC7QAOxoDAFvA4XnmwCJcAN3gAbZHgHtUoAOZkxUVImjEAdACgQ2sACUKYtel2gAjOtABJWKGjxIHRiwA0oAJ6oKoSPFupYMXcfLlg5aHYOCIAjBwBrOAJIVDwIlUiIrEQApnwfFOhLADlUHmjSji0QUAAmSwBBHk4IxNp6e0dnZjcGd2ZoRwG43DlQAFsKYh5meGI2PwJm0DxkLCxoVVgeFeJmMXh3ZVVTUFOsClhIBjRYNgmp0FhS0FUGCkRbXGTb5Cm4HlUxEMDDYAHcorZPN5EBcMuw1CCtKYAELxVrJVKaTTfB4KJTJQGgAC8oAA2ppTqcBJBVCsGAIXBTKQIngBaGnQOkMpmnapCWCiCRSRkAXUIbBxDCxvX6oAA4oojhESTLoHR5IqCWpSbAKGNohsxdUACKyJ48Rx+cKRX6gCSwaBY6oAMWyW3RBSxkpIFEgMDmAFk1MR4NaSQIAJpeeTPZAMACEAmxAQeDEQ7nqcnguCDc1DytAAhKPEoccKoAAKunCFncAB+JPekTiSS5kNhwtR96EW6gjagW1fVBjPbQJhJzTnS7XALLX57A5KswACmIWswCvxKmgAEpMFMUGFQABvHkD+irrXEonhjlcncns+Ul5j962IF+4Nt-NngC+Z9eN92HTTNs1gb9wk0f9JwuK4bjnXZ9kOLUakvbcN01bc90YQ9RlPZ9VlANDVGvcM2TvOMBAffDn0pQCPmAjNa3A4Mf2ff9n3o99fX9YgIMdaCpzg2cdgXZDtwAZmI6AMK3VRsIPEZH2fYhQTjTppOop9KV8UhCwo+kTFo4yXzeBiP14-jtNOXSIhZVB2VpSijJMzjXwYtMmLAqzXNSLB4GBFzXN5MBoAADy4SZrmEOBgxCIZrNotdtxIbhfhwNRHmgGLEAAbkS59OGyUFQAAUUQbJEGXAQAFVYFUZI5FgZAAC9ORIK9pAAag6rC-ygrEhJnWxQjwIwlT0AZoGQGK8Gk2SlS058cVQIx1DEVA5GXAADG8SQAEmPZLVF-Ujtp3LFlpTVbCg2rbRKQpdNIuq7bhu9bNuXB7FxQ56zxWta7q++dHq1KTjt3C7oL5CsEWICcsHSZdvQhtoNTktQlspUbxq1SaYBmzlNIGoA)
 
 ???
 
