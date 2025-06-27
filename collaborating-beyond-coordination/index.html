@@ -655,7 +655,7 @@ function parseScore(raw: GqlScore): Score {
 
 ---
 
-## Backward-compatible enum handling 4
+## Forward-compatible enum handling 4
 
 Now the exhaustiveness check forces us to update the business logic at the
 same time.
@@ -751,6 +751,22 @@ class: center, middle
 ## API Design Tip
 
 **Don't over-promise.** Start simple and add more functionality if needed.
+
+---
+
+## Takeaways
+
+--
+
+- Test, test test. Treat tests as an append-only log of your guarantees to your callers.
+
+--
+
+- When an API change can't be made backward-compatible (e.g. enum example), make all callers forward-compatible instead.
+
+--
+
+- Trying to formalize backward compatibility is a distraction. Focus on callers that actually exist.
 
 ---
 
